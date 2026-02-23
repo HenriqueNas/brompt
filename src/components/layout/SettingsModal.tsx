@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { storage } from '@/lib/storage';
+import { useSettings } from '@/contexts/SettingsContext';
 import { X } from 'lucide-react';
 
 interface SettingsModalProps {
@@ -12,17 +12,17 @@ interface SettingsModalProps {
 
 export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const { t, language, setLanguage } = useLanguage();
-  const [apiKey, setApiKey] = useState('');
+  const { apiKey, setApiKey } = useSettings();
+  const [localKey, setLocalKey] = useState('');
 
   useEffect(() => {
     if (isOpen) {
-      const storedKey = storage.getItem<string>('gemini_api_key', '');
-      setApiKey(storedKey);
+      setLocalKey(apiKey);
     }
-  }, [isOpen]);
+  }, [isOpen, apiKey]);
 
   const handleSave = () => {
-    storage.setItem('gemini_api_key', apiKey);
+    setApiKey(localKey);
     onClose();
   };
 
@@ -45,8 +45,8 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             </label>
             <input
               type="password"
-              value={apiKey}
-              onChange={(e) => setApiKey(e.target.value)}
+              value={localKey}
+              onChange={(e) => setLocalKey(e.target.value)}
               placeholder={t('settings.api_key_placeholder')}
               className="w-full rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800"
             />
