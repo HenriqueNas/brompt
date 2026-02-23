@@ -1,0 +1,55 @@
+{
+  "id": "code-review-v1",
+  "title": "Code Review Assistant",
+  "version": "1.0.0",
+  "fields": [
+    {
+      "id": "category",
+      "type": "select",
+      "label": "Category",
+      "description": "Select the domain of the code review",
+      "defaultValue": "frontend",
+      "options": [
+        { "label": "Frontend", "value": "frontend" },
+        { "label": "Backend", "value": "backend" },
+        { "label": "DevOps", "value": "devops" }
+      ]
+    },
+    {
+      "id": "includeAccessibility",
+      "type": "toggle",
+      "label": "Include Accessibility Check",
+      "description": "Ensure code follows WCAG guidelines",
+      "defaultValue": false,
+      "dependsOn": {
+        "fieldId": "category",
+        "value": "frontend"
+      }
+    },
+    {
+      "id": "detailLevel",
+      "type": "slider",
+      "label": "Detail Level",
+      "description": "Adjust the depth of the review feedback",
+      "defaultValue": 3,
+      "min": 1,
+      "max": 5,
+      "step": 1
+    },
+    {
+      "id": "preferredStack",
+      "type": "multiselect",
+      "label": "Preferred Stack",
+      "description": "Select technologies relevant to this review",
+      "defaultValue": [],
+      "options": [
+        { "label": "React", "value": "react" },
+        { "label": "TypeScript", "value": "typescript" },
+        { "label": "Node.js", "value": "nodejs" },
+        { "label": "Tailwind CSS", "value": "tailwindcss" },
+        { "label": "PostgreSQL", "value": "postgresql" },
+        { "label": "Docker", "value": "docker" }
+      ]
+    }
+  ]
+}

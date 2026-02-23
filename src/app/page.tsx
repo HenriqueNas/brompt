@@ -3,6 +3,7 @@
 import React from 'react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { PromptFormEngine } from '@/features/form/PromptFormEngine';
 
 export default function Home() {
   const { t } = useLanguage();
@@ -16,9 +17,7 @@ export default function Home() {
         </div>
 
         <div className="rounded-lg border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-          <div className="flex h-64 items-center justify-center rounded border-2 border-dashed border-zinc-200 dark:border-zinc-700">
-            <span className="text-sm text-zinc-500">C1 Form Placeholder</span>
-          </div>
+          <PromptFormEngine />
         </div>
       </div>
     </MainLayout>
