@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { Copy, Check } from 'lucide-react';
+import { Copy, Check, FileCode, Eye } from 'lucide-react';
 
 interface MarkdownPreviewProps {
   content: string;
@@ -9,6 +9,7 @@ interface MarkdownPreviewProps {
 
 export const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({ content }) => {
   const [copied, setCopied] = useState(false);
+  const [isRaw, setIsRaw] = useState(false);
 
   const handleCopy = async () => {
     try {
@@ -24,6 +25,18 @@ export const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({ content }) => 
     <div className="relative group rounded-lg border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900 overflow-hidden shadow-sm">
       <div className="absolute top-2 right-2 flex items-center gap-2 z-10">
         <button
+          onClick={() => setIsRaw(!isRaw)}
+          className="p-2 rounded-md bg-zinc-100/80 hover:bg-zinc-200 dark:bg-zinc-800/80 dark:hover:bg-zinc-700 transition-colors backdrop-blur-sm"
+          aria-label={isRaw ? "Show preview" : "Show raw markdown"}
+          title={isRaw ? "Preview" : "Raw"}
+        >
+          {isRaw ? (
+            <Eye className="w-4 h-4 text-zinc-500 dark:text-zinc-400" />
+          ) : (
+            <FileCode className="w-4 h-4 text-zinc-500 dark:text-zinc-400" />
+          )}
+        </button>
+        <button
           onClick={handleCopy}
           className="p-2 rounded-md bg-zinc-100/80 hover:bg-zinc-200 dark:bg-zinc-800/80 dark:hover:bg-zinc-700 transition-colors backdrop-blur-sm"
           aria-label="Copy to clipboard"
@@ -37,7 +50,13 @@ export const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({ content }) => 
         </button>
       </div>
       <div className="p-6 prose prose-zinc dark:prose-invert max-w-none text-sm leading-relaxed">
-        <ReactMarkdown>{content}</ReactMarkdown>
+        {isRaw ? (
+          <pre className="whitespace-pre-wrap font-mono text-xs bg-zinc-50 dark:bg-zinc-900/50 p-4 rounded-md overflow-x-auto">
+            {content}
+          </pre>
+        ) : (
+          <ReactMarkdown>{content}</ReactMarkdown>
+        )}
       </div>
     </div>
   );
