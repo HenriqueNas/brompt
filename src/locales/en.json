@@ -1,0 +1,25 @@
+{
+  "app": {
+    "title": "Brompt",
+    "tagline": "Crafting powerful prompts effortlessly."
+  },
+  "sidebar": {
+    "new_chat": "New Chat",
+    "history": "History",
+    "drafts": "Drafts",
+    "settings": "Settings"
+  },
+  "settings": {
+    "title": "Settings",
+    "api_key_label": "Gemini API Key",
+    "api_key_placeholder": "Enter your Gemini API Key",
+    "language_label": "Language",
+    "theme_label": "Theme",
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+  "c1": {
+    "loading": "Generating...",
+    "error": "Something went wrong"
+  }
+}
