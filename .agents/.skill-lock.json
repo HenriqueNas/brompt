@@ -1,0 +1,77 @@
+{
+  "version": 2,
+  "skills": {
+    "coding-guidelines": {
+      "name": "coding-guidelines",
+      "source": "local",
+      "contentHash": "7d98273930ef3622d6d5339403860722a26e5de91fdcf9d96738618aedd82c10",
+      "installedAt": "2026-02-23T02:24:05.161Z",
+      "updatedAt": "2026-02-23T02:24:05.161Z",
+      "agents": [
+        "trae"
+      ],
+      "method": "copy",
+      "global": false
+    },
+    "docs-writer": {
+      "name": "docs-writer",
+      "source": "local",
+      "contentHash": "f8327ca0ba45f57625f26ed23d8d013717640b68379f027a59f6337f489960f0",
+      "installedAt": "2026-02-23T02:24:05.167Z",
+      "updatedAt": "2026-02-23T02:24:05.167Z",
+      "agents": [
+        "trae"
+      ],
+      "method": "copy",
+      "global": false
+    },
+    "best-practices": {
+      "name": "best-practices",
+      "source": "local",
+      "contentHash": "397e1833b5a71830f875b57926aafe6b450e76a4407282506e5d74766411c991",
+      "installedAt": "2026-02-23T02:24:05.170Z",
+      "updatedAt": "2026-02-23T02:24:05.170Z",
+      "agents": [
+        "trae"
+      ],
+      "method": "copy",
+      "global": false
+    },
+    "accessibility": {
+      "name": "accessibility",
+      "source": "local",
+      "contentHash": "04f7951c52ad4925edb53a13b285398933c0249df1c77d5498592bf47b519ae7",
+      "installedAt": "2026-02-23T02:24:05.173Z",
+      "updatedAt": "2026-02-23T02:24:05.173Z",
+      "agents": [
+        "trae"
+      ],
+      "method": "copy",
+      "global": false
+    },
+    "security-best-practices": {
+      "name": "security-best-practices",
+      "source": "local",
+      "contentHash": "e75a7e845663b8d7b072860acc5d5ebb44dddb4ea7622a77c055c3fbae15aa06",
+      "installedAt": "2026-02-23T02:24:05.180Z",
+      "updatedAt": "2026-02-23T02:24:05.180Z",
+      "agents": [
+        "trae"
+      ],
+      "method": "copy",
+      "global": false
+    },
+    "react-best-practices": {
+      "name": "react-best-practices",
+      "source": "local",
+      "contentHash": "078a4a2ea3c5d32f79ef3ab3366630f25c70e10479445aa82fc2c5a89cc9aa59",
+      "installedAt": "2026-02-23T02:27:08.822Z",
+      "updatedAt": "2026-02-23T02:27:08.822Z",
+      "agents": [
+        "trae"
+      ],
+      "method": "copy",
+      "global": false
+    }
+  }
+}
