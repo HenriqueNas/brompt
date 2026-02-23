@@ -1,4 +1,11 @@
+---
+alwaysApply: true
+---
 # C1 Patterns by Thesys
+
+## C1 SDK Implementation
+- **Source of Truth**: Always refer to the patterns in `https://docs.thesys.dev` for C1 implementation.
+- **State-to-Props Mapping**: Define clear interfaces for how C1 state maps to React component props to maintain the "Strict TypeScript" rule.
 
 ## C1 Orchestration
 - **C1 as State Manager**: Use `@crayonai/react-core` (or relevant C1 package) as the primary state orchestration engine.

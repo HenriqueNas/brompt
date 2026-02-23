@@ -1,3 +1,6 @@
+---
+alwaysApply: true
+---
 # Coding Standards & Best Practices
 
 ## TypeScript Rules
@@ -26,3 +29,11 @@
 - **No External Backend**: Do not make calls to external servers for data persistence.
 - **Gemini API Exception**: The only allowed external API call is to Google's Gemini API for generating prompts.
 - **Key Security**: API keys must never be logged or sent to any server other than the Gemini endpoint.
+
+## Internationalization (i18n)
+- **Lightweight Pattern**: Use a custom Context and JSON files in `src/locales/`. Do not install heavy libraries unless complexity increases significantly.
+- **Key-Based Access**: Always use keys (e.g., `t('settings.api_key')`) instead of hardcoded strings in components.
+
+## Data Access Layer
+- **Type-Safe Storage**: All localStorage access must go through a central `src/lib/storage.ts` utility. 
+- **No Direct Calls**: Avoid calling `localStorage` directly inside components to ensure consistency and easier debugging of the "Persistence" requirement.
