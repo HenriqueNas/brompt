@@ -1,32 +1,69 @@
 # Brompt: High-Efficiency Prompt Engineering Toolkit
 
-**Brompt** is an open-source web application designed to maximize efficiency in creating high-quality "entry prompts." It bridges the gap between prompt engineering techniques and practical execution by eliminating "prompt fatigue"—the cognitive load of remembering frameworks and the friction of manual writing.
+<div align="center">
+  <h3>Eliminate Prompt Fatigue. Build Better Prompts, Faster.</h3>
+  <p>
+    Brompt is an open-source, privacy-first web application designed to bridge the gap between prompt engineering theory and practical execution.
+  </p>
+  
+  <p>
+    <a href="#key-features">Key Features</a> •
+    <a href="#how-it-works">How It Works</a> •
+    <a href="#getting-started">Getting Started</a> •
+    <a href="#contributing">Contributing</a>
+  </p>
+</div>
 
-Built with a dynamic, visual-first interface (powered by **C1 by Thesys**), Brompt transforms complex instruction building into a series of interactive choices. The experience is **"Simple by Default,"** allowing any user to generate structured prompts in seconds.
+---
 
-## Project Vision
+## 🚀 Why Brompt?
 
-- **Efficiency:** Drastic reduction in iteration time.
-- **Quality:** High-performance LLM responses from the very first attempt.
-- **Security & Privacy:** Local handling of API keys and open-source transparency.
+Writing high-quality prompts for LLMs (Large Language Models) is often a friction-filled process. Users face "prompt fatigue"—the cognitive load of remembering complex frameworks, context requirements, and formatting rules.
 
-## Tech Stack
+**Brompt solves this by turning prompt creation into a conversation.**
 
-- **Framework:** [Next.js](https://nextjs.org/) (React Framework)
-- **Language:** [TypeScript](https://www.typescriptlang.org/)
-- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
-- **Orchestration:** [C1 by Thesys](https://docs.thesys.dev/)
-- **State Management:** React Context / Local State (SPA Architecture)
+Instead of staring at a blank text box, Brompt guides you through a dynamic, interactive questionnaire tailored to your specific goal. The result? A structured, high-performance "Mega-Prompt" generated in seconds.
 
-## Architecture
+### Core Philosophy
 
-Brompt follows a **Single Page Application (SPA)** architecture within a Next.js environment.
+- **Simple by Default**: No complex settings to tweak upfront. Just type your goal and start.
+- **Privacy First**: No backend database. Your API keys, history, and drafts live exclusively in your browser's `localStorage`.
+- **Schema-Driven**: The UI adapts in real-time based on what the AI needs to know, powered by a flexible JSON schema engine.
 
-- **Schema-Driven UI:** The core form engine is powered by C1, which dynamically renders UI components based on JSON schemas. This allows for rapid iteration on prompt structures without code changes.
-- **Privacy-First:** All sensitive data (API keys, history) is stored exclusively in `localStorage`. The application communicates directly with the Gemini API from the client (or via a thin proxy for security if needed, but primarily client-side for privacy).
-- **No Routing Libraries:** Navigation is handled via internal state management to provide a seamless, app-like experience without full page reloads.
+## ✨ Key Features
 
-## Installation & Development
+- **Dynamic Form Engine**: The interface changes based on your answers. If you're writing code, it asks about languages; if you're writing a blog, it asks about tone and audience.
+- **Iterative Refinement**: A multi-round "interview" process ensuring no detail is missed.
+- **Local Persistence**: Auto-saving drafts and history management without sending data to a third-party server.
+- **Client-Side AI**: Direct integration with Google's Gemini API for fast, secure processing.
+- **Multi-Language Support**: Built-in support for English and Portuguese (easily extensible).
+
+## 🛠️ Tech Stack
+
+- **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **AI Provider**: Google Gemini API
+- **State Management**: React Context + Hooks
+- **Package Manager**: [pnpm](https://pnpm.io/)
+
+## ⚡ How It Works
+
+1.  **Seed**: You provide a high-level goal (e.g., "I want a Python script to parse CSV files").
+2.  **Analyze**: Brompt uses an LLM to analyze your goal and determine missing information.
+3.  **Refine**: The app generates a set of specific questions (using sliders, dropdowns, text inputs).
+4.  **Iterate**: You answer the questions, and the cycle repeats until the prompt is perfect.
+5.  **Generate**: Brompt compiles all context into a final, optimized prompt ready for use.
+
+## 🏁 Getting Started
+
+### Prerequisites
+
+- Node.js (v20+)
+- pnpm (`npm install -g pnpm`)
+- A Google Gemini API Key
+
+### Installation
 
 1.  **Clone the repository:**
 
@@ -36,34 +73,42 @@ Brompt follows a **Single Page Application (SPA)** architecture within a Next.js
     ```
 
 2.  **Install dependencies:**
-    This project uses `pnpm` for package management.
 
     ```bash
     pnpm install
     ```
 
-3.  **Set up Environment Variables:**
-    Create a `.env.local` file in the root directory and add your Thesys API Key (if required for C1 orchestration):
-
-    ```bash
-    THESYS_API_KEY=your_thesys_api_key
-    ```
-
-    _Note: Gemini API keys are entered by the user in the UI and stored locally._
-
-4.  **Run the development server:**
+3.  **Run the development server:**
 
     ```bash
     pnpm dev
     ```
 
-5.  **Open the app:**
+4.  **Open the app:**
     Navigate to [http://localhost:3000](http://localhost:3000).
 
-## Contributing
+5.  **Enter API Key**:
+    On first launch, you'll be prompted to enter your Gemini API Key. This is stored locally in your browser.
 
-We welcome contributions! Please see our [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to submit pull requests, report issues, and suggest improvements.
+## 🤝 Contributing
+
+We welcome contributions from the community! Whether it's fixing bugs, adding new features, or improving documentation, your help is appreciated.
+
+Please read our [CONTRIBUTING.md](docs/CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+
+## 📄 Documentation
+
+For more detailed information about the project structure and workflows, check out the `/docs` directory:
+
+- [Architecture Overview](docs/architecture/overview.md)
+- [User Workflow](docs/workflow/user-journey.md)
+
+## 📜 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-**License:** MIT
+<div align="center">
+  <sub>Built with ❤️ by Henrique Nascimento. Powered by Open Source.</sub>
+</div>
