@@ -6,9 +6,13 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "format": "prettier --write \"**/*.{ts,tsx}\""
+    "lint:dry-run": "next lint  --max-warnings 0",
+    "lint:fix": "next lint --fix",
+    "format:dry-run": "prettier --check \"**/*.{ts,tsx}\"",
+    "format:fix": "prettier --write \"**/*.{ts,tsx}\"",
+    "check": "pnpm typecheck && pnpm lint:dry-run && pnpm format:dry-run",
+    "prepare": "husky"
   },
   "dependencies": {
     "@crayonai/react-core": "^0.7.6",
@@ -37,7 +41,10 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.2.4",
+    "husky": "^9.1.7",
     "lightningcss": "^1.29.2",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.8.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   },
