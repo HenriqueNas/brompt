@@ -2,7 +2,11 @@ import OpenAI from 'openai'
 import { LLMProvider } from '../types'
 
 export class OpenAIProvider implements LLMProvider {
-  async generate(apiKey: string, promptPayload: string): Promise<string> {
+  async generate(
+    apiKey: string,
+    promptPayload: string,
+    options?: { modelId?: string }
+  ): Promise<string> {
     if (!apiKey) {
       throw new Error('API Key is missing.')
     }
@@ -12,12 +16,9 @@ export class OpenAIProvider implements LLMProvider {
       dangerouslyAllowBrowser: true,
     })
 
-    const modelsToTry = [
-      'gpt-4o',
-      'gpt-4o-mini',
-      'gpt-4-turbo',
-      'gpt-3.5-turbo',
-    ]
+    const modelsToTry = options?.modelId
+      ? [options.modelId]
+      : ['gpt-4o', 'gpt-4o-mini', 'gpt-4-turbo', 'gpt-3.5-turbo']
 
     let lastError: unknown
 

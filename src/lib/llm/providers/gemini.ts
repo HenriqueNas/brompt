@@ -2,22 +2,24 @@ import { GoogleGenerativeAI } from '@google/generative-ai'
 import { LLMProvider } from '../types'
 
 export class GeminiProvider implements LLMProvider {
-  async generate(apiKey: string, promptPayload: string): Promise<string> {
+  async generate(
+    apiKey: string,
+    promptPayload: string,
+    options?: { modelId?: string }
+  ): Promise<string> {
     if (!apiKey) {
       throw new Error('API Key is missing.')
     }
 
     // List of models to try in order of preference
-    // 1. gemini-1.5-flash: Standard alias for the latest stable Flash model
-    // 2. gemini-1.5-flash-latest: Specific alias sometimes needed
-    // 3. gemini-flash-latest: Another common alias
-    // 4. gemini-pro: Fallback to Pro if Flash is unavailable
-    const modelsToTry = [
-      'gemini-1.5-flash',
-      'gemini-1.5-flash-latest',
-      'gemini-flash-latest',
-      'gemini-pro',
-    ]
+    const modelsToTry = options?.modelId
+      ? [options.modelId]
+      : [
+          'gemini-1.5-flash',
+          'gemini-1.5-flash-latest',
+          'gemini-flash-latest',
+          'gemini-pro',
+        ]
 
     let lastError: unknown
     const genAI = new GoogleGenerativeAI(apiKey)
