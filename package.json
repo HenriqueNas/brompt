@@ -4,6 +4,10 @@
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
+  "author": {
+    "name": "Henrique Nas",
+    "email": "henriquenas.dev@gmail.com"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
@@ -48,7 +52,8 @@
     "lint-staged": "^16.2.7",
     "prettier": "^3.8.1",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.0.18"
   },
   "overrides": {
     "lucide-react": "^0.564.0"
