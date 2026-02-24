@@ -43,10 +43,14 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
         <div className='space-y-4'>
           <div>
-            <label className='mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300'>
+            <label
+              htmlFor='api-key-input'
+              className='mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300'
+            >
               {t('settings.api_key_label')}
             </label>
             <input
+              id='api-key-input'
               type='password'
               value={localKey}
               onChange={(e) => setLocalKey(e.target.value)}
@@ -56,10 +60,14 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           </div>
 
           <div>
-            <label className='mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300'>
+            <label
+              htmlFor='language-select'
+              className='mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300'
+            >
               {t('settings.language_label')}
             </label>
             <select
+              id='language-select'
               value={language}
               onChange={(e) => setLanguage(e.target.value as 'en' | 'pt')}
               className='w-full rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800'

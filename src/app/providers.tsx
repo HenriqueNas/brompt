@@ -13,7 +13,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <SettingsProvider>
         <HistoryProvider>
           <ToastProvider>
-            <ThemeProvider mode='system'>{children}</ThemeProvider>
+            <ThemeProvider mode='dark'>{children}</ThemeProvider>
           </ToastProvider>
         </HistoryProvider>
       </SettingsProvider>

@@ -330,7 +330,10 @@ The prompt should be written in ${langInstruction}, unless the user explicitly r
       case 'textarea':
         return (
           <div key={field.id} className='space-y-2'>
-            <label className='block text-sm font-medium text-zinc-700 dark:text-zinc-300'>
+            <label
+              htmlFor={field.id}
+              className='block text-sm font-medium text-zinc-700 dark:text-zinc-300'
+            >
               {field.label}
             </label>
             {field.description && (
@@ -340,6 +343,7 @@ The prompt should be written in ${langInstruction}, unless the user explicitly r
             )}
             {field.type === 'textarea' ? (
               <textarea
+                id={field.id}
                 className='w-full p-3 rounded-lg border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950 focus:ring-2 focus:ring-blue-500 outline-none transition-all min-h-25'
                 placeholder={field.placeholder}
                 value={String(value || '')}
@@ -352,6 +356,7 @@ The prompt should be written in ${langInstruction}, unless the user explicitly r
               />
             ) : (
               <input
+                id={field.id}
                 type='text'
                 className='w-full p-3 rounded-lg border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950 focus:ring-2 focus:ring-blue-500 outline-none transition-all'
                 placeholder={field.placeholder}

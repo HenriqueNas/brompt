@@ -97,6 +97,8 @@ export const DynamicMultiSelect: React.FC<DynamicMultiSelectProps> = ({
           {options.map((option) => (
             <div
               key={option.value}
+              role='option'
+              aria-selected={value.includes(option.value)}
               className={`cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-zinc-100 dark:hover:bg-zinc-700 ${
                 value.includes(option.value)
                   ? 'bg-zinc-50 dark:bg-zinc-700/50'
