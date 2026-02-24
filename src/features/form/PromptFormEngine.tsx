@@ -13,7 +13,10 @@ import { useHistory } from '../../contexts/HistoryContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useSettings } from '../../contexts/SettingsContext'
 import { useToast } from '../../contexts/ToastContext'
+import { anthropicProvider } from '../../lib/llm/providers/anthropic'
 import { geminiProvider } from '../../lib/llm/providers/gemini'
+import { openaiProvider } from '../../lib/llm/providers/openai'
+import { LLMProvider, LLMProviderType } from '../../lib/llm/types'
 import { MarkdownPreview } from '../output/MarkdownPreview'
 import { DynamicMultiSelect } from './components/DynamicMultiSelect'
 import { DynamicSelect } from './components/DynamicSelect'
@@ -31,7 +34,7 @@ import { clearDraft, loadDraft, useAutosaveDraft } from './useAutosaveDraft'
 const MAX_ROUNDS = 10
 
 export const PromptFormEngine: React.FC = () => {
-  const { openSettings, apiKey } = useSettings()
+  const { openSettings, apiKey, selectedProvider } = useSettings()
   const { t, language } = useLanguage()
   const { showToast } = useToast()
   const { saveSession, activeSession } = useHistory()
@@ -107,6 +110,20 @@ export const PromptFormEngine: React.FC = () => {
       bottomRef.current.scrollIntoView({ behavior: 'smooth' })
     }
   }, [round, currentSchema, generatedPrompt])
+
+  // --- Helpers ---
+  const getProvider = (type: LLMProviderType): LLMProvider => {
+    switch (type) {
+      case 'gemini':
+        return geminiProvider
+      case 'openai':
+        return openaiProvider
+      case 'anthropic':
+        return anthropicProvider
+      default:
+        return geminiProvider
+    }
+  }
 
   // --- Handlers ---
 
@@ -285,7 +302,10 @@ Use Markdown for formatting.
 The prompt should be written in ${langInstruction}, unless the user explicitly requested otherwise in their goal.
 `
 
-      const result = await geminiProvider.generate(apiKey, metaPrompt)
+      const result = await getProvider(selectedProvider).generate(
+        apiKey,
+        metaPrompt
+      )
       setGeneratedPrompt(result)
 
       // Save Session
