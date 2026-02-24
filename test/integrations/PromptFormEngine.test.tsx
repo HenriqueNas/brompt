@@ -110,7 +110,8 @@ describe('PromptFormEngine Integration', () => {
     expect(geminiProvider.generate).toHaveBeenCalledTimes(1)
     expect(geminiProvider.generate).toHaveBeenCalledWith(
       'fake-api-key',
-      expect.stringContaining('I want a blog post generator')
+      expect.stringContaining('I want a blog post generator'),
+      expect.objectContaining({ modelId: expect.any(String) })
     )
   })
 
