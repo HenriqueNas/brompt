@@ -36,7 +36,7 @@ import { clearDraft, loadDraft, useAutosaveDraft } from './useAutosaveDraft'
 const MAX_ROUNDS = 10
 
 export const PromptFormEngine: React.FC = () => {
-  const { openSettings, apiKey, selectedProvider, selectedModel } =
+  const { openSettings, apiKey, selectedProvider, availableModels } =
     useSettings()
   const { t, language } = useLanguage()
   const { showToast } = useToast()
@@ -236,7 +236,7 @@ Do not include markdown formatting (like \`\`\`json). Just the raw JSON.
       const result = await getProvider(selectedProvider).generate(
         apiKey,
         systemPrompt,
-        { modelId: selectedModel }
+        { modelId: availableModels[0]?.id }
       )
 
       // Parse JSON
@@ -316,7 +316,7 @@ The prompt should be written in ${langInstruction}, unless the user explicitly r
       const result = await getProvider(selectedProvider).generate(
         apiKey,
         metaPrompt,
-        { modelId: selectedModel }
+        { modelId: availableModels[0]?.id }
       )
       setGeneratedPrompt(result)
 

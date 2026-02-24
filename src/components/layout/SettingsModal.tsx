@@ -14,39 +14,18 @@ interface SettingsModalProps {
 
 export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const { t, language, setLanguage } = useLanguage()
-  const {
-    apiKeys,
-    setApiKey,
-    selectedProvider,
-    setSelectedProvider,
-    selectedModel,
-    setSelectedModel,
-  } = useSettings()
+  const { apiKeys, setApiKey, selectedProvider, setSelectedProvider } =
+    useSettings()
 
   const [localKeys, setLocalKeys] = useState<Record<string, string>>({})
   const [localProvider, setLocalProvider] = useState<LLMProviderType>('gemini')
-  const [localModel, setLocalModel] = useState<string>('')
 
   useEffect(() => {
     if (isOpen) {
       setLocalKeys(apiKeys)
       setLocalProvider(selectedProvider)
-      setLocalModel(selectedModel)
     }
-  }, [isOpen, apiKeys, selectedProvider, selectedModel])
-
-  // When localProvider changes, update localModel to default
-  useEffect(() => {
-    if (!isOpen) return
-    const providerConfig = PROVIDER_REGISTRY.find((p) => p.id === localProvider)
-
-    // Only reset if the current localModel doesn't belong to the new provider
-    const isModelValid = providerConfig?.models.some((m) => m.id === localModel)
-
-    if (providerConfig && !isModelValid) {
-      setLocalModel(providerConfig.models[0]?.id || '')
-    }
-  }, [localProvider, isOpen]) // Intentionally omitting localModel to avoid loops
+  }, [isOpen, apiKeys, selectedProvider])
 
   const handleSave = () => {
     // Save keys
@@ -59,14 +38,6 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     // Save selected provider
     if (localProvider !== selectedProvider) {
       setSelectedProvider(localProvider)
-    }
-
-    // Save selected model
-    // Note: setSelectedProvider might reset the model in context, so we should set model after?
-    // Actually, context logic handles model reset on provider change.
-    // But if we want to override with a specific user choice:
-    if (localModel && localModel !== selectedModel) {
-      setSelectedModel(localModel)
     }
 
     onClose()
@@ -91,11 +62,23 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     }
   }
 
-  // Get models for the currently selected LOCAL provider
-  const currentProviderConfig = PROVIDER_REGISTRY.find(
-    (p) => p.id === localProvider
-  )
-  const currentModels = currentProviderConfig?.models || []
+  // Helper for placeholder
+  const getPlaceholder = (provider: string) => {
+    switch (provider) {
+      case 'openai':
+        return 'sk-...'
+      case 'anthropic':
+        return 'sk-ant-...'
+      case 'gemini':
+        return 'AIzaSy...'
+      case 'mistral':
+        return '...'
+      case 'groq':
+        return 'gsk_...'
+      default:
+        return '...'
+    }
+  }
 
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm'>
@@ -135,30 +118,6 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             </select>
           </div>
 
-          {/* Model Selection */}
-          {currentModels.length > 0 && (
-            <div>
-              <label
-                htmlFor='model-select'
-                className='mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300'
-              >
-                {t('settings.model_label') || 'Model'}
-              </label>
-              <select
-                id='model-select'
-                value={localModel}
-                onChange={(e) => setLocalModel(e.target.value)}
-                className='w-full rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800'
-              >
-                {currentModels.map((model) => (
-                  <option key={model.id} value={model.id}>
-                    {model.displayName}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-
           {/* API Key Input */}
           <div>
             <label
@@ -177,7 +136,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   [localProvider]: e.target.value,
                 }))
               }
-              placeholder={t('settings.api_key_placeholder')}
+              placeholder={getPlaceholder(localProvider)}
               className='w-full rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800'
             />
           </div>

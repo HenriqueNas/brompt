@@ -41,9 +41,10 @@ export const PROVIDER_REGISTRY: ProviderConfig[] = [
       vision: true,
     },
     models: [
+      { id: 'gpt-4o-mini', displayName: 'GPT-4o Mini' },
+      { id: 'gpt-3.5-turbo', displayName: 'GPT-3.5 Turbo' },
       { id: 'gpt-4o', displayName: 'GPT-4o' },
       { id: 'gpt-4-turbo', displayName: 'GPT-4 Turbo' },
-      { id: 'gpt-3.5-turbo', displayName: 'GPT-3.5 Turbo' },
     ],
   },
   {
@@ -57,16 +58,16 @@ export const PROVIDER_REGISTRY: ProviderConfig[] = [
       vision: true,
     },
     models: [
-      { id: 'claude-3-5-sonnet-20240620', displayName: 'Claude 3.5 Sonnet' },
-      { id: 'claude-3-opus-20240229', displayName: 'Claude 3 Opus' },
-      { id: 'claude-3-sonnet-20240229', displayName: 'Claude 3 Sonnet' },
       { id: 'claude-3-haiku-20240307', displayName: 'Claude 3 Haiku' },
+      { id: 'claude-3-5-sonnet-20240620', displayName: 'Claude 3.5 Sonnet' },
+      { id: 'claude-3-sonnet-20240229', displayName: 'Claude 3 Sonnet' },
+      { id: 'claude-3-opus-20240229', displayName: 'Claude 3 Opus' },
     ],
   },
   {
     id: 'gemini',
     displayName: 'Google Gemini',
-    adapter: 'ai-sdk', // Will migrate Gemini later, currently native but we can list it here
+    adapter: 'ai-sdk',
     capabilities: {
       streaming: true,
       tools: true,
@@ -74,8 +75,8 @@ export const PROVIDER_REGISTRY: ProviderConfig[] = [
       vision: true,
     },
     models: [
-      { id: 'gemini-1.5-pro', displayName: 'Gemini 1.5 Pro' },
       { id: 'gemini-1.5-flash', displayName: 'Gemini 1.5 Flash' },
+      { id: 'gemini-1.5-pro', displayName: 'Gemini 1.5 Pro' },
     ],
   },
   {
@@ -89,8 +90,8 @@ export const PROVIDER_REGISTRY: ProviderConfig[] = [
       vision: false,
     },
     models: [
-      { id: 'mistral-large-latest', displayName: 'Mistral Large' },
       { id: 'mistral-small-latest', displayName: 'Mistral Small' },
+      { id: 'mistral-large-latest', displayName: 'Mistral Large' },
     ],
   },
   {
@@ -104,8 +105,8 @@ export const PROVIDER_REGISTRY: ProviderConfig[] = [
       vision: false,
     },
     models: [
-      { id: 'llama3-70b-8192', displayName: 'Llama 3 70B' },
       { id: 'llama3-8b-8192', displayName: 'Llama 3 8B' },
+      { id: 'llama3-70b-8192', displayName: 'Llama 3 70B' },
       { id: 'mixtral-8x7b-32768', displayName: 'Mixtral 8x7B' },
     ],
   },

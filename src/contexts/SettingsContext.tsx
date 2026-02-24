@@ -14,8 +14,6 @@ interface SettingsContextType {
   setApiKey: (provider: LLMProviderType, key: string) => void
   selectedProvider: LLMProviderType
   setSelectedProvider: (provider: LLMProviderType) => void
-  selectedModel: string
-  setSelectedModel: (modelId: string) => void
   apiKey: string
   availableModels: { id: string; displayName: string }[]
 }
@@ -36,7 +34,6 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [selectedProvider, setSelectedProviderState] =
     useState<LLMProviderType>('gemini')
-  const [selectedModel, setSelectedModelState] = useState<string>('')
 
   const [apiKeys, setApiKeys] = useState<Record<string, string>>({
     gemini: '',
@@ -59,45 +56,9 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       'gemini'
     )
 
-    // Get stored model or default to first model of selected provider
-    const storedModel = storage.getItem<string>('selected_model', '')
-
     setApiKeys({ gemini, openai, anthropic, mistral, groq })
     setSelectedProviderState(provider)
-
-    // Validate or set default model
-    const providerConfig = PROVIDER_REGISTRY.find((p) => p.id === provider)
-    if (providerConfig) {
-      const isValidModel = providerConfig.models.some(
-        (m) => m.id === storedModel
-      )
-      if (isValidModel) {
-        setSelectedModelState(storedModel)
-      } else {
-        setSelectedModelState(providerConfig.models[0]?.id || '')
-      }
-    }
   }, [])
-
-  // Validate and default model when provider changes
-  useEffect(() => {
-    const providerConfig = PROVIDER_REGISTRY.find(
-      (p) => p.id === selectedProvider
-    )
-    if (providerConfig) {
-      const isValidModel = providerConfig.models.some(
-        (m) => m.id === selectedModel
-      )
-      if (!isValidModel && providerConfig.models.length > 0) {
-        const defaultModel = providerConfig.models[0].id
-        setSelectedModelState(defaultModel)
-        storage.setItem('selected_model', defaultModel)
-      } else if (!isValidModel) {
-        setSelectedModelState('')
-        storage.setItem('selected_model', '')
-      }
-    }
-  }, [selectedProvider, selectedModel])
 
   const openSettings = () => setIsSettingsOpen(true)
   const closeSettings = () => setIsSettingsOpen(false)
@@ -114,11 +75,6 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const handleSetSelectedProvider = (provider: LLMProviderType) => {
     setSelectedProviderState(provider)
     storage.setItem('selected_provider', provider)
-  }
-
-  const handleSetSelectedModel = (modelId: string) => {
-    setSelectedModelState(modelId)
-    storage.setItem('selected_model', modelId)
   }
 
   // Derived state
@@ -138,8 +94,6 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         setApiKey: handleSetApiKey,
         selectedProvider,
         setSelectedProvider: handleSetSelectedProvider,
-        selectedModel,
-        setSelectedModel: handleSetSelectedModel,
         apiKey: apiKeys[selectedProvider as string] || '',
         availableModels,
       }}
