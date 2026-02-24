@@ -29,30 +29,32 @@ Brompt follows a **Single Page Application (SPA)** architecture within a Next.js
 ## Installation & Development
 
 1.  **Clone the repository:**
+
     ```bash
     git clone https://github.com/your-username/brompt.git
     cd brompt
     ```
 
 2.  **Install dependencies:**
+    This project uses `pnpm` for package management.
+
     ```bash
     pnpm install
-    # or
-    npm install
     ```
 
 3.  **Set up Environment Variables:**
     Create a `.env.local` file in the root directory and add your Thesys API Key (if required for C1 orchestration):
+
     ```bash
     THESYS_API_KEY=your_thesys_api_key
     ```
-    *Note: Gemini API keys are entered by the user in the UI and stored locally.*
+
+    _Note: Gemini API keys are entered by the user in the UI and stored locally._
 
 4.  **Run the development server:**
+
     ```bash
     pnpm dev
-    # or
-    npm run dev
     ```
 
 5.  **Open the app:**
@@ -60,7 +62,7 @@ Brompt follows a **Single Page Application (SPA)** architecture within a Next.js
 
 ## Contributing
 
-We welcome contributions! Please see our [CONTRIBUTING.md](CONTRIBUTING.md) (coming soon) for details on how to submit pull requests, report issues, and suggest improvements.
+We welcome contributions! Please see our [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to submit pull requests, report issues, and suggest improvements.
 
 ---
 
