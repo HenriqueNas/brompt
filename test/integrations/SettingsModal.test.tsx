@@ -114,4 +114,28 @@ describe('SettingsModal Integration', () => {
       screen.queryByRole('heading', { name: /Settings/i })
     ).not.toBeInTheDocument()
   })
+
+  it('should not save unchanged API keys', () => {
+    vi.mocked(storage.getItem).mockImplementation((key, defaultValue) => {
+      if (key === 'gemini_api_key') return 'initial-key'
+      if (key === 'language') return 'en'
+      return defaultValue
+    })
+
+    const onClose = vi.fn()
+    render(
+      <Providers>
+        <SettingsModal isOpen={true} onClose={onClose} />
+      </Providers>
+    )
+
+    const saveButton = screen.getByRole('button', { name: /Save/i })
+    fireEvent.click(saveButton)
+
+    expect(storage.setItem).not.toHaveBeenCalledWith(
+      'gemini_api_key',
+      'initial-key'
+    )
+    expect(onClose).toHaveBeenCalled()
+  })
 })
