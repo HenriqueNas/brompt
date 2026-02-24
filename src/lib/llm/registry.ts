@@ -75,8 +75,8 @@ export const PROVIDER_REGISTRY: ProviderConfig[] = [
       vision: true,
     },
     models: [
-      { id: 'gemini-1.5-flash', displayName: 'Gemini 1.5 Flash' },
-      { id: 'gemini-1.5-pro', displayName: 'Gemini 1.5 Pro' },
+      { id: 'gemini-2.5-flash', displayName: 'Gemini 2.5 Flash' },
+      { id: 'gemini-2.5-pro', displayName: 'Gemini 2.5 Pro' },
     ],
   },
   {
