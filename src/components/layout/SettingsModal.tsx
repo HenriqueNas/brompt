@@ -1,10 +1,11 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { useSettings } from '@/contexts/SettingsContext'
-import { X } from 'lucide-react'
+import { PROVIDER_REGISTRY } from '@/lib/llm/registry'
 import { LLMProviderType } from '@/lib/llm/types'
+import { X } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
 interface SettingsModalProps {
   isOpen: boolean
@@ -13,26 +14,43 @@ interface SettingsModalProps {
 
 export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const { t, language, setLanguage } = useLanguage()
-  const { apiKeys, setApiKey, selectedProvider, setSelectedProvider } =
-    useSettings()
+  const {
+    apiKeys,
+    setApiKey,
+    selectedProvider,
+    setSelectedProvider,
+    selectedModel,
+    setSelectedModel,
+  } = useSettings()
 
-  const [localKeys, setLocalKeys] = useState<Record<LLMProviderType, string>>({
-    gemini: '',
-    openai: '',
-    anthropic: '',
-  })
+  const [localKeys, setLocalKeys] = useState<Record<string, string>>({})
   const [localProvider, setLocalProvider] = useState<LLMProviderType>('gemini')
+  const [localModel, setLocalModel] = useState<string>('')
 
   useEffect(() => {
     if (isOpen) {
       setLocalKeys(apiKeys)
       setLocalProvider(selectedProvider)
+      setLocalModel(selectedModel)
     }
-  }, [isOpen, apiKeys, selectedProvider])
+  }, [isOpen, apiKeys, selectedProvider, selectedModel])
+
+  // When localProvider changes, update localModel to default
+  useEffect(() => {
+    if (!isOpen) return
+    const providerConfig = PROVIDER_REGISTRY.find((p) => p.id === localProvider)
+
+    // Only reset if the current localModel doesn't belong to the new provider
+    const isModelValid = providerConfig?.models.some((m) => m.id === localModel)
+
+    if (providerConfig && !isModelValid) {
+      setLocalModel(providerConfig.models[0]?.id || '')
+    }
+  }, [localProvider, isOpen]) // Intentionally omitting localModel to avoid loops
 
   const handleSave = () => {
     // Save keys
-    ;(Object.keys(localKeys) as LLMProviderType[]).forEach((provider) => {
+    Object.keys(localKeys).forEach((provider) => {
       if (localKeys[provider] !== apiKeys[provider]) {
         setApiKey(provider, localKeys[provider])
       }
@@ -43,12 +61,20 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
       setSelectedProvider(localProvider)
     }
 
+    // Save selected model
+    // Note: setSelectedProvider might reset the model in context, so we should set model after?
+    // Actually, context logic handles model reset on provider change.
+    // But if we want to override with a specific user choice:
+    if (localModel && localModel !== selectedModel) {
+      setSelectedModel(localModel)
+    }
+
     onClose()
   }
 
   if (!isOpen) return null
 
-  const getProviderLabelKey = (provider: LLMProviderType) => {
+  const getProviderLabelKey = (provider: string) => {
     switch (provider) {
       case 'gemini':
         return 'settings.gemini_key_label'
@@ -56,8 +82,20 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         return 'settings.openai_key_label'
       case 'anthropic':
         return 'settings.anthropic_key_label'
+      case 'mistral':
+        return 'settings.mistral_key_label'
+      case 'groq':
+        return 'settings.groq_key_label'
+      default:
+        return 'settings.api_key_placeholder'
     }
   }
+
+  // Get models for the currently selected LOCAL provider
+  const currentProviderConfig = PROVIDER_REGISTRY.find(
+    (p) => p.id === localProvider
+  )
+  const currentModels = currentProviderConfig?.models || []
 
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm'>
@@ -89,11 +127,37 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               }
               className='w-full rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800'
             >
-              <option value='gemini'>Google Gemini</option>
-              <option value='openai'>OpenAI</option>
-              <option value='anthropic'>Anthropic Claude</option>
+              {PROVIDER_REGISTRY.map((provider) => (
+                <option key={provider.id} value={provider.id}>
+                  {provider.displayName}
+                </option>
+              ))}
             </select>
           </div>
+
+          {/* Model Selection */}
+          {currentModels.length > 0 && (
+            <div>
+              <label
+                htmlFor='model-select'
+                className='mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300'
+              >
+                {t('settings.model_label') || 'Model'}
+              </label>
+              <select
+                id='model-select'
+                value={localModel}
+                onChange={(e) => setLocalModel(e.target.value)}
+                className='w-full rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800'
+              >
+                {currentModels.map((model) => (
+                  <option key={model.id} value={model.id}>
+                    {model.displayName}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           {/* API Key Input */}
           <div>
@@ -106,7 +170,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             <input
               id='api-key-input'
               type='password'
-              value={localKeys[localProvider]}
+              value={localKeys[localProvider] || ''}
               onChange={(e) =>
                 setLocalKeys((prev) => ({
                   ...prev,
