@@ -1,14 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { PromptSchema, FormField } from './schema';
-import { DynamicSelect } from './components/DynamicSelect';
-import { DynamicToggle } from './components/DynamicToggle';
-import { DynamicSlider } from './components/DynamicSlider';
-import { DynamicMultiSelect } from './components/DynamicMultiSelect';
-import { geminiProvider } from '../../lib/llm/providers/gemini';
-import { storage } from '../../lib/storage';
-import { MarkdownPreview } from '../output/MarkdownPreview';
-import { Loader2, Sparkles, AlertCircle, ArrowRight, Check, ChevronRight, Settings } from 'lucide-react';
+import { AlertCircle, ArrowRight, ChevronRight, Loader2, Settings, Sparkles } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSettings } from '../../contexts/SettingsContext';
+import { geminiProvider } from '../../lib/llm/providers/gemini';
+import { MarkdownPreview } from '../output/MarkdownPreview';
+import { DynamicMultiSelect } from './components/DynamicMultiSelect';
+import { DynamicSelect } from './components/DynamicSelect';
+import { DynamicSlider } from './components/DynamicSlider';
+import { DynamicToggle } from './components/DynamicToggle';
+import { FormField, PromptSchema } from './schema';
 
 // --- Types ---
 interface RoundHistory {
@@ -195,7 +194,7 @@ Use Markdown for formatting.
 
       const result = await geminiProvider.generate(apiKey, metaPrompt);
       setGeneratedPrompt(result);
-    } catch (err) {
+    } catch {
       setError("Failed to generate final prompt.");
     } finally {
       setIsGenerating(false);
@@ -368,7 +367,7 @@ Use Markdown for formatting.
               What do you want to build?
             </h1>
             <p className="text-lg text-zinc-500 dark:text-zinc-400 max-w-xl mx-auto">
-              Describe your goal, and I'll interview you to craft the perfect prompt.
+              Describe your goal, and I&apos;ll interview you to craft the perfect prompt.
             </p>
           </div>
 
