@@ -7,7 +7,10 @@
     "new_chat": "New Chat",
     "history": "History",
     "drafts": "Drafts",
-    "settings": "Settings"
+    "settings": "Settings",
+    "search_placeholder": "Search...",
+    "no_history": "No history yet",
+    "no_matches": "No matches"
   },
   "settings": {
     "title": "Settings",
@@ -16,8 +19,40 @@
     "language_label": "Language",
     "theme_label": "Theme",
     "save": "Save",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "save_success": "Settings saved!"
   },
+  "form": {
+    "seed_label": "What do you want to build?",
+    "seed_placeholder": "e.g., I need a prompt to generate unit tests for a React component...",
+    "seed_description": "Describe your goal, and I'll interview you to craft the perfect prompt.",
+    "start_button": "Start Architecting",
+    "analyzing": "Analyzing Goal...",
+    "thinking": "Thinking...",
+    "next_round": "Next Round",
+    "finish_button": "Finish & Generate",
+    "result_title": "Your Architected Prompt",
+    "start_over": "Start Over",
+    "draft_saved": "Draft saved",
+    "api_key_required_title": "API Key Required",
+    "api_key_required_desc": "To start architecting your prompts with AI guidance, you need to configure your Gemini API Key.",
+    "open_settings": "Open Settings",
+    "error_api_missing": "API Key is missing.",
+    "error_generate_questions": "Failed to generate next questions. Please try again.",
+    "error_generate_final": "Failed to generate final prompt.",
+    "reset_confirm_title": "Reset Form?",
+    "reset_confirm_desc": "Are you sure? This will clear your current architectural progress.",
+    "reset_confirm_yes": "Yes, Reset",
+    "reset_success": "Form reset successful.",
+    "clipboard_success": "Prompt copied to clipboard!",
+    "retry": "Retry"
+  },
+  "examples": [
+    "Create a startup pitch for a fintech app",
+    "Analyze software architecture of a monolithic app",
+    "Write a technical blog post about React Server Components",
+    "Generate a SQL query for user retention analysis"
+  ],
   "c1": {
     "loading": "Generating...",
     "error": "Something went wrong"

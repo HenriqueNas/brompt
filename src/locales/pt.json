@@ -7,7 +7,10 @@
     "new_chat": "Nova Conversa",
     "history": "Histórico",
     "drafts": "Rascunhos",
-    "settings": "Configurações"
+    "settings": "Configurações",
+    "search_placeholder": "Pesquisar...",
+    "no_history": "Sem histórico",
+    "no_matches": "Sem resultados"
   },
   "settings": {
     "title": "Configurações",
@@ -16,8 +19,40 @@
     "language_label": "Idioma",
     "theme_label": "Tema",
     "save": "Salvar",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "save_success": "Configurações salvas!"
   },
+  "form": {
+    "seed_label": "O que você quer criar?",
+    "seed_placeholder": "ex: Preciso de um prompt para gerar testes unitários para um componente React...",
+    "seed_description": "Descreva seu objetivo e eu o entrevistarei para criar o prompt perfeito.",
+    "start_button": "Começar Arquitetura",
+    "analyzing": "Analisando Objetivo...",
+    "thinking": "Pensando...",
+    "next_round": "Próxima Rodada",
+    "finish_button": "Finalizar & Gerar",
+    "result_title": "Seu Prompt Arquitetado",
+    "start_over": "Recomeçar",
+    "draft_saved": "Rascunho salvo",
+    "api_key_required_title": "Chave da API Necessária",
+    "api_key_required_desc": "Para começar a arquitetar seus prompts com orientação de IA, você precisa configurar sua Chave da API Gemini.",
+    "open_settings": "Abrir Configurações",
+    "error_api_missing": "A Chave da API está faltando.",
+    "error_generate_questions": "Falha ao gerar próximas perguntas. Tente novamente.",
+    "error_generate_final": "Falha ao gerar prompt final.",
+    "reset_confirm_title": "Redefinir Formulário?",
+    "reset_confirm_desc": "Tem certeza? Isso limpará seu progresso arquitetural atual.",
+    "reset_confirm_yes": "Sim, Redefinir",
+    "reset_success": "Formulário redefinido com sucesso.",
+    "clipboard_success": "Prompt copiado para a área de transferência!",
+    "retry": "Tentar novamente"
+  },
+  "examples": [
+    "Crie um pitch de startup para um aplicativo fintech",
+    "Analise a arquitetura de software de um aplicativo monolítico",
+    "Escreva um post técnico sobre React Server Components",
+    "Gere uma consulta SQL para análise de retenção de usuários"
+  ],
   "c1": {
     "loading": "Gerando...",
     "error": "Algo deu errado"
