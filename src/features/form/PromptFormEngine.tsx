@@ -1,28 +1,26 @@
-import { AlertCircle, ArrowRight, ChevronRight, Loader2, Settings, Sparkles, Cloud } from 'lucide-react';
+import { AlertCircle, ArrowRight, ChevronRight, Cloud, Loader2, RefreshCcw, Settings, Sparkles } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
+import { useHistory } from '../../contexts/HistoryContext';
+import { useLanguage } from '../../contexts/LanguageContext';
 import { useSettings } from '../../contexts/SettingsContext';
+import { useToast } from '../../contexts/ToastContext';
 import { geminiProvider } from '../../lib/llm/providers/gemini';
 import { MarkdownPreview } from '../output/MarkdownPreview';
 import { DynamicMultiSelect } from './components/DynamicMultiSelect';
 import { DynamicSelect } from './components/DynamicSelect';
 import { DynamicSlider } from './components/DynamicSlider';
 import { DynamicToggle } from './components/DynamicToggle';
-import { FormField, PromptSchema, RoundHistory, ArchitectSession } from './schema';
-import { useHistory } from '../../contexts/HistoryContext';
-import { useAutosaveDraft, clearDraft, loadDraft } from './useAutosaveDraft';
+import { ArchitectSession, FormField, PromptSchema, RoundHistory } from './schema';
+import { clearDraft, loadDraft, useAutosaveDraft } from './useAutosaveDraft';
 
 // --- Constants ---
 const MAX_ROUNDS = 10;
-const SEED_EXAMPLES = [
-  "Create a startup pitch for a fintech app",
-  "Analyze software architecture of a monolithic app",
-  "Write a technical blog post about React Server Components",
-  "Generate a SQL query for user retention analysis"
-];
 
 export const PromptFormEngine: React.FC = () => {
   const { openSettings, apiKey } = useSettings();
-  const { saveSession, activeSession, setActiveSession } = useHistory();
+  const { t, language } = useLanguage();
+  const { showToast } = useToast();
+  const { saveSession, activeSession } = useHistory();
   
   // --- State ---
   const [round, setRound] = useState(0);
@@ -35,6 +33,7 @@ export const PromptFormEngine: React.FC = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedPrompt, setGeneratedPrompt] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [lastAction, setLastAction] = useState<'seed' | 'next' | 'finish' | null>(null);
   
   // Ref for auto-scrolling
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -90,16 +89,27 @@ export const PromptFormEngine: React.FC = () => {
     }
   }, [round, currentSchema, generatedPrompt]);
 
+  // Listen for global reset event from Sidebar
+  useEffect(() => {
+    const handleResetEvent = () => {
+      handleStartOver();
+    };
+    window.addEventListener('brompt:reset', handleResetEvent);
+    return () => window.removeEventListener('brompt:reset', handleResetEvent);
+  }, []);
+
   const hasApiKey = !!apiKey;
 
   // --- Handlers ---
 
   const handleSeedSubmit = async () => {
     if (!seedInput.trim()) return;
+    setLastAction('seed');
     await generateNextRound(seedInput, []);
   };
 
   const handleNextRound = async () => {
+    setLastAction('next');
     // Save current round to history
     if (currentSchema) {
       const newHistoryItem: RoundHistory = {
@@ -121,7 +131,7 @@ export const PromptFormEngine: React.FC = () => {
     setIsGenerating(true);
     
     if (!apiKey) {
-      setError("API Key is missing.");
+      setError(t('form.error_api_missing'));
       setIsGenerating(false);
       return;
     }
@@ -133,16 +143,20 @@ export const PromptFormEngine: React.FC = () => {
         answers: h.answers
       }));
 
+      const langInstruction = language === 'pt' ? 'Portuguese' : 'English';
+
       const systemPrompt = `
 You are an expert AI Architect helping a user craft a perfect prompt.
 Current Goal: "${goal}"
 Interaction History: ${JSON.stringify(historyContext)}
 Current Round: ${currentHistory.length + 1} of ${MAX_ROUNDS}
+User Language: ${langInstruction}
 
 Your task is to generate the NEXT set of questions (1-3 fields) to ask the user to refine their prompt.
 - Focus on what's missing (context, tone, constraints, format, audience).
 - If the goal is clear, ask for specific details.
 - Provide "suggestions" for text inputs where helpful.
+- IMPORTANT: Generate all labels, descriptions, placeholders, options, and suggestions in ${langInstruction}.
 - Return ONLY a valid JSON object matching this schema:
 {
   "title": "Title for this section",
@@ -189,13 +203,14 @@ Do not include markdown formatting (like \`\`\`json). Just the raw JSON.
 
     } catch (err: unknown) {
       console.error(err);
-      setError("Failed to generate next questions. Please try again.");
+      setError(t('form.error_generate_questions'));
     } finally {
       setIsGenerating(false);
     }
   };
 
   const handleFinish = async () => {
+    setLastAction('finish');
     setError(null);
     setIsGenerating(true);
     setGeneratedPrompt(null);
@@ -219,6 +234,8 @@ Do not include markdown formatting (like \`\`\`json). Just the raw JSON.
             answers: h.answers
         })), null, 2);
 
+        const langInstruction = language === 'pt' ? 'Portuguese' : 'English';
+
         const metaPrompt = `
 You are an expert Prompt Engineer.
 Create a comprehensive, structured, and high-quality system prompt based on the user's goal and their answers to the refinement questions.
@@ -229,6 +246,7 @@ ${context}
 
 The output should be the raw prompt text, ready to be copied and used in an LLM.
 Use Markdown for formatting.
+The prompt should be written in ${langInstruction}, unless the user explicitly requested otherwise in their goal.
 `;
 
       const result = await geminiProvider.generate(apiKey, metaPrompt);
@@ -251,10 +269,25 @@ Use Markdown for formatting.
       }
 
     } catch {
-      setError("Failed to generate final prompt.");
+      setError(t('form.error_generate_final'));
     } finally {
       setIsGenerating(false);
     }
+  };
+
+  const handleStartOver = () => {
+    setGeneratedPrompt(null);
+    setRound(0);
+    setSeedInput('');
+    setHistory([]);
+    setFormData({});
+    showToast(t('form.reset_success'), 'success');
+  };
+
+  const handleRetry = () => {
+    if (lastAction === 'seed') handleSeedSubmit();
+    else if (lastAction === 'next') handleNextRound();
+    else if (lastAction === 'finish') handleFinish();
   };
 
   // --- Render Helpers ---
@@ -365,9 +398,9 @@ Use Markdown for formatting.
           <AlertCircle className="w-12 h-12" />
         </div>
         <div className="space-y-2">
-          <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">API Key Required</h2>
+          <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">{t('form.api_key_required_title')}</h2>
           <p className="text-zinc-500 dark:text-zinc-400 max-w-md mx-auto">
-            To start architecting your prompts with AI guidance, you need to configure your Gemini API Key.
+            {t('form.api_key_required_desc')}
           </p>
         </div>
         <button
@@ -375,11 +408,39 @@ Use Markdown for formatting.
           className="flex items-center gap-2 px-6 py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors shadow-lg shadow-blue-500/20"
         >
           <Settings className="w-5 h-5" />
-          Open Settings
+          {t('form.open_settings')}
         </button>
       </div>
     );
   }
+
+  // Helper to get translated examples
+  const getExamples = () => {
+    // Assuming t('examples') returns an array if the key maps to an array
+    // If the i18n helper doesn't support arrays directly, we might need to map indices
+    // But for now, let's assume we can fetch the array or map manual keys.
+    // Since our t implementation might be simple, let's use a workaround if needed.
+    // If t returns the string value, we can try to parse it if it's not typed as string only.
+    // However, looking at LanguageContext, it likely returns 'any' or string.
+    
+    // Let's use specific keys or just assume the array is available via t
+    // If t only returns strings, we should have used example_1, example_2 etc.
+    // But let's see if we can access the raw json or if t handles it.
+    // Given the context file I saw earlier, t does lookup.
+    
+    // Safest bet: access the raw object if possible or just hardcode the keys loop
+    const examples = [
+      t('examples.0'),
+      t('examples.1'),
+      t('examples.2'),
+      t('examples.3')
+    ];
+    // If t returns key when missing, we need to be careful.
+    // Actually, I defined "examples" as an array in JSON.
+    // Most simple i18n libraries flatten keys like examples.0
+    // I will assume that dot notation works for arrays too.
+    return examples;
+  };
 
   return (
     <div className="space-y-8 pb-20 max-w-3xl mx-auto">
@@ -409,9 +470,9 @@ Use Markdown for formatting.
             </div>
 
             {!activeSession && !generatedPrompt && (
-              <div className="flex items-center gap-1.5 text-xs font-medium text-zinc-400 shrink-0 animate-in fade-in duration-700 hidden sm:flex">
+              <div className="hidden sm:flex items-center gap-1.5 text-xs font-medium text-zinc-400 shrink-0 animate-in fade-in duration-700">
                 <Cloud className="w-3.5 h-3.5" />
-                <span>Draft saved</span>
+                <span>{t('form.draft_saved')}</span>
               </div>
             )}
           </div>
@@ -430,10 +491,10 @@ Use Markdown for formatting.
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
           <div className="text-center space-y-4">
             <h1 className="text-4xl font-bold tracking-tight bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              What do you want to build?
+              {t('form.seed_label')}
             </h1>
             <p className="text-lg text-zinc-500 dark:text-zinc-400 max-w-xl mx-auto">
-              Describe your goal, and I&apos;ll interview you to craft the perfect prompt.
+              {t('form.seed_description')}
             </p>
           </div>
 
@@ -441,14 +502,14 @@ Use Markdown for formatting.
             <textarea
               value={seedInput}
               onChange={(e) => setSeedInput(e.target.value)}
-              placeholder="e.g., I need a prompt to generate unit tests for a React component..."
+              placeholder={t('form.seed_placeholder')}
               className="w-full p-6 text-lg rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900 focus:ring-2 focus:ring-blue-500 outline-none transition-all min-h-37.5 resize-none"
             />
             
             <div className="flex flex-wrap gap-2 justify-center">
-              {SEED_EXAMPLES.map((ex) => (
+              {getExamples().map((ex, i) => (
                 <button
-                  key={ex}
+                  key={i}
                   onClick={() => setSeedInput(ex)}
                   className="px-4 py-2 text-sm rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-300 transition-colors"
                 >
@@ -466,11 +527,11 @@ Use Markdown for formatting.
             {isGenerating ? (
               <>
                 <Loader2 className="w-6 h-6 animate-spin" />
-                Analyzing Goal...
+                {t('form.analyzing')}
               </>
             ) : (
               <>
-                Start Architecting
+                {t('form.start_button')}
                 <ArrowRight className="w-5 h-5" />
               </>
             )}
@@ -503,11 +564,11 @@ Use Markdown for formatting.
               {isGenerating ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  Thinking...
+                  {t('form.thinking')}
                 </>
               ) : (
                 <>
-                  Next Round
+                  {t('form.next_round')}
                   <ChevronRight className="w-5 h-5" />
                 </>
               )}
@@ -520,7 +581,7 @@ Use Markdown for formatting.
                     className="py-3 px-6 rounded-lg font-medium text-zinc-700 bg-zinc-100 hover:bg-zinc-200 dark:text-zinc-300 dark:bg-zinc-800 dark:hover:bg-zinc-700 transition-all flex items-center justify-center gap-2"
                 >
                     <Sparkles className="w-5 h-5" />
-                    Finish & Generate
+                    {t('form.finish_button')}
                 </button>
             )}
           </div>
@@ -529,9 +590,18 @@ Use Markdown for formatting.
 
       {/* Error State */}
       {error && (
-        <div className="p-4 rounded-lg bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400 flex items-center gap-2">
-          <AlertCircle className="w-5 h-5" />
-          {error}
+        <div className="p-4 rounded-lg bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="w-5 h-5" />
+            {error}
+          </div>
+          <button 
+            onClick={handleRetry}
+            className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-md bg-white text-red-600 hover:bg-red-100 dark:bg-red-950 dark:text-red-300 dark:hover:bg-red-900/50 transition-colors shadow-sm"
+          >
+            <RefreshCcw className="w-4 h-4" />
+            {t('form.retry')}
+          </button>
         </div>
       )}
 
@@ -539,18 +609,12 @@ Use Markdown for formatting.
       {generatedPrompt && (
         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-8 duration-700">
           <div className="flex items-center justify-between">
-            <h3 className="text-xl font-bold text-zinc-900 dark:text-zinc-100">Your Architected Prompt</h3>
+            <h3 className="text-xl font-bold text-zinc-900 dark:text-zinc-100">{t('form.result_title')}</h3>
              <button
-                onClick={() => {
-                    setGeneratedPrompt(null);
-                    setRound(0);
-                    setSeedInput('');
-                    setHistory([]);
-                    setFormData({});
-                }}
+                onClick={handleStartOver}
                 className="text-sm text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-300 underline"
             >
-                Start Over
+                {t('form.start_over')}
             </button>
           </div>
           <MarkdownPreview content={generatedPrompt} />

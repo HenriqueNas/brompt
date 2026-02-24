@@ -1,7 +1,9 @@
 
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useToast } from '@/contexts/ToastContext';
+import { Check, Copy, Eye, FileCode } from 'lucide-react';
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { Copy, Check, FileCode, Eye } from 'lucide-react';
 
 interface MarkdownPreviewProps {
   content: string;
@@ -10,11 +12,14 @@ interface MarkdownPreviewProps {
 export const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({ content }) => {
   const [copied, setCopied] = useState(false);
   const [isRaw, setIsRaw] = useState(false);
+  const { showToast } = useToast();
+  const { t } = useLanguage();
 
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(content);
       setCopied(true);
+      showToast(t('form.clipboard_success'), 'success');
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error('Failed to copy:', err);
