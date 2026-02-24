@@ -15,6 +15,8 @@ import { useSettings } from '../../contexts/SettingsContext'
 import { useToast } from '../../contexts/ToastContext'
 import { anthropicProvider } from '../../lib/llm/providers/anthropic'
 import { geminiProvider } from '../../lib/llm/providers/gemini'
+import { groqProvider } from '../../lib/llm/providers/groq'
+import { mistralProvider } from '../../lib/llm/providers/mistral'
 import { openaiProvider } from '../../lib/llm/providers/openai'
 import { LLMProvider, LLMProviderType } from '../../lib/llm/types'
 import { MarkdownPreview } from '../output/MarkdownPreview'
@@ -34,7 +36,8 @@ import { clearDraft, loadDraft, useAutosaveDraft } from './useAutosaveDraft'
 const MAX_ROUNDS = 10
 
 export const PromptFormEngine: React.FC = () => {
-  const { openSettings, apiKey, selectedProvider } = useSettings()
+  const { openSettings, apiKey, selectedProvider, selectedModel } =
+    useSettings()
   const { t, language } = useLanguage()
   const { showToast } = useToast()
   const { saveSession, activeSession } = useHistory()
@@ -120,6 +123,10 @@ export const PromptFormEngine: React.FC = () => {
         return openaiProvider
       case 'anthropic':
         return anthropicProvider
+      case 'mistral':
+        return mistralProvider
+      case 'groq':
+        return groqProvider
       default:
         return geminiProvider
     }
@@ -187,7 +194,7 @@ export const PromptFormEngine: React.FC = () => {
     }
 
     try {
-      // Construct context for Gemini
+      // Construct context
       const historyContext = currentHistory.map((h) => ({
         round: h.round,
         answers: h.answers,
@@ -226,7 +233,11 @@ Your task is to generate the NEXT set of questions (1-3 fields) to ask the user 
 Do not include markdown formatting (like \`\`\`json). Just the raw JSON.
 `
 
-      const result = await geminiProvider.generate(apiKey, systemPrompt)
+      const result = await getProvider(selectedProvider).generate(
+        apiKey,
+        systemPrompt,
+        { modelId: selectedModel }
+      )
 
       // Parse JSON
       let cleanResult = result.trim()
@@ -304,7 +315,8 @@ The prompt should be written in ${langInstruction}, unless the user explicitly r
 
       const result = await getProvider(selectedProvider).generate(
         apiKey,
-        metaPrompt
+        metaPrompt,
+        { modelId: selectedModel }
       )
       setGeneratedPrompt(result)
 
