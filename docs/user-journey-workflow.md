@@ -5,9 +5,10 @@ This document outlines the primary user flows within the Brompt application.
 ## 1. Onboarding & Setup
 
 1.  **Landing**: User arrives at the application.
-2.  **API Key Requirement**:
-    - If no API key is found in `localStorage`, the app blocks the main interface.
-    - User is prompted to enter their Google Gemini API Key.
+2.  **Configuration**:
+    - User opens Settings (gear icon).
+    - Selects an AI Provider (Gemini, OpenAI, Anthropic, Mistral, Groq).
+    - Enters the corresponding API Key.
     - Key is saved locally to `localStorage`.
 
 ## 2. Creating a Prompt (The Loop)
@@ -75,5 +76,7 @@ This document outlines the primary user flows within the Brompt application.
 ## 5. Settings
 
 - **Language**: Toggle between English and Portuguese.
-- **API Key**: Update or remove the stored Gemini API Key.
+- **AI Provider**: Switch between supported providers (Gemini, OpenAI, Anthropic, Mistral, Groq).
+- **Model Selection**: Choose specific models (e.g., GPT-4o, Claude 3.5 Sonnet) for the selected provider.
+- **API Keys**: Manage keys for each provider independently.
 - **Theme**: Toggle Dark/Light mode (system default initially).
