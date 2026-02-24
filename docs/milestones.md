@@ -28,7 +28,7 @@ This document outlines the phased development plan for **Brompt**, breaking down
   - Prompt History Sidebar & Search
   - Draft Auto-saving
 
-- [ ] **[Milestone 5: Internationalization & Polish](./milestones/05-internationalization-polish.md)**
+- [x] **[Milestone 5: Internationalization & Polish](./milestones/05-internationalization-polish.md)**
   - i18n Support (English / Portuguese)
   - "Reset Form" with Confirmation
   - Final UI/UX Refinements
@@ -40,4 +40,4 @@ As development proceeds, mark tasks as complete in the corresponding milestone f
 
 ---
 
-*Based on [PRD.md](../PRD.md)*
+_Based on [PRD.md](../PRD.md)_
