@@ -1,12 +1,12 @@
-import React from 'react';
+import React from 'react'
 
 interface DynamicToggleProps {
-  id: string;
-  label: string;
-  description?: string;
-  checked: boolean;
-  onChange: (checked: boolean) => void;
-  isLoading?: boolean;
+  id: string
+  label: string
+  description?: string
+  checked: boolean
+  onChange: (checked: boolean) => void
+  isLoading?: boolean
 }
 
 export const DynamicToggle: React.FC<DynamicToggleProps> = ({
@@ -18,19 +18,24 @@ export const DynamicToggle: React.FC<DynamicToggleProps> = ({
   isLoading = false,
 }) => {
   return (
-    <div className="flex items-center justify-between py-2">
-      <div className="flex flex-col">
-        <label htmlFor={id} className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+    <div className='flex items-center justify-between py-2'>
+      <div className='flex flex-col'>
+        <label
+          htmlFor={id}
+          className='text-sm font-medium text-zinc-900 dark:text-zinc-100'
+        >
           {label}
         </label>
         {description && (
-          <p className="text-xs text-zinc-500 dark:text-zinc-400">{description}</p>
+          <p className='text-xs text-zinc-500 dark:text-zinc-400'>
+            {description}
+          </p>
         )}
       </div>
       <button
         id={id}
-        type="button"
-        role="switch"
+        type='button'
+        role='switch'
         aria-checked={checked}
         onClick={() => !isLoading && onChange(!checked)}
         disabled={isLoading}
@@ -39,17 +44,17 @@ export const DynamicToggle: React.FC<DynamicToggleProps> = ({
         }`}
       >
         <span
-          aria-hidden="true"
+          aria-hidden='true'
           className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
             checked ? 'translate-x-5' : 'translate-x-0'
           }`}
         />
         {isLoading && (
-          <span className="absolute right-0 top-0 h-full w-full flex items-center justify-center">
-            <span className="h-3 w-3 animate-spin rounded-full border-2 border-white border-t-transparent"></span>
+          <span className='absolute right-0 top-0 h-full w-full flex items-center justify-center'>
+            <span className='h-3 w-3 animate-spin rounded-full border-2 border-white border-t-transparent'></span>
           </span>
         )}
       </button>
     </div>
-  );
-};
+  )
+}

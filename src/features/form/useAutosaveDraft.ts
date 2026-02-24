@@ -1,25 +1,25 @@
-import { storage } from '@/lib/storage';
-import { useEffect } from 'react';
-import { Draft } from './schema';
+import { storage } from '@/lib/storage'
+import { useEffect } from 'react'
+import { Draft } from './schema'
 
 export const useAutosaveDraft = (draft: Draft, enabled: boolean = true) => {
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled) return
 
     const timer = setTimeout(() => {
-        if (draft.round > 0 || draft.seedInput.trim().length > 0) {
-            storage.setItem('drafts', { ...draft, timestamp: Date.now() });
-        }
-    }, 1000); // Debounce
+      if (draft.round > 0 || draft.seedInput.trim().length > 0) {
+        storage.setItem('drafts', { ...draft, timestamp: Date.now() })
+      }
+    }, 1000) // Debounce
 
-    return () => clearTimeout(timer);
-  }, [draft]);
-};
+    return () => clearTimeout(timer)
+  }, [draft, enabled])
+}
 
 export const clearDraft = () => {
-  storage.removeItem('drafts');
-};
+  storage.removeItem('drafts')
+}
 
 export const loadDraft = (): Draft | null => {
-  return storage.getItem<Draft | null>('drafts', null);
-};
+  return storage.getItem<Draft | null>('drafts', null)
+}

@@ -1,4 +1,3 @@
-
 export interface LLMProvider {
-  generate(apiKey: string, promptPayload: string): Promise<string>;
+  generate(apiKey: string, promptPayload: string): Promise<string>
 }
