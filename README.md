@@ -3,20 +3,15 @@
 <div align="center">
   <h3>Eliminate Prompt Fatigue. Build Better Prompts, Faster.</h3>
   <p>
-    Brompt is an open-source, privacy-first web application designed to bridge the gap between prompt engineering theory and practical execution.
+    Brompt is an open-source, privacy-first web application designed to bridge the gap between prompt engineering theory and practical execution. 
+    <a href="https://henriquenas.github.io/brompt/">Check live demo here</a>
   </p>
   
-  <p>
-    <a href="#key-features">Key Features</a> •
-    <a href="#how-it-works">How It Works</a> •
-    <a href="#getting-started">Getting Started</a> •
-    <a href="#contributing">Contributing</a>
-  </p>
 </div>
 
 ---
 
-## 🚀 Why Brompt?
+## Why Brompt?
 
 Writing high-quality prompts for LLMs (Large Language Models) is often a friction-filled process. Users face "prompt fatigue"—the cognitive load of remembering complex frameworks, context requirements, and formatting rules.
 
@@ -91,7 +86,7 @@ Brompt requires API keys to function. You can enter your keys directly in the ap
 
 Keys are stored securely in your browser's `localStorage` and are never sent to any server other than the respective AI provider.
 
-## 🤝 Contributing
+## Contributing
 
 We welcome contributions from the community! Whether it's fixing bugs, adding new features, or improving documentation, your help is appreciated.
 
