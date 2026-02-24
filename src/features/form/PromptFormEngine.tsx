@@ -1,4 +1,4 @@
-import { AlertCircle, ArrowRight, ChevronRight, Loader2, Settings, Sparkles } from 'lucide-react';
+import { AlertCircle, ArrowRight, ChevronRight, Loader2, Settings, Sparkles, Cloud } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useSettings } from '../../contexts/SettingsContext';
 import { geminiProvider } from '../../lib/llm/providers/gemini';
@@ -7,15 +7,9 @@ import { DynamicMultiSelect } from './components/DynamicMultiSelect';
 import { DynamicSelect } from './components/DynamicSelect';
 import { DynamicSlider } from './components/DynamicSlider';
 import { DynamicToggle } from './components/DynamicToggle';
-import { FormField, PromptSchema } from './schema';
-
-// --- Types ---
-interface RoundHistory {
-  round: number;
-  question: string; // The goal or previous context
-  answers: Record<string, unknown>;
-  schema: PromptSchema;
-}
+import { FormField, PromptSchema, RoundHistory, ArchitectSession } from './schema';
+import { useHistory } from '../../contexts/HistoryContext';
+import { useAutosaveDraft, clearDraft, loadDraft } from './useAutosaveDraft';
 
 // --- Constants ---
 const MAX_ROUNDS = 10;
@@ -28,6 +22,7 @@ const SEED_EXAMPLES = [
 
 export const PromptFormEngine: React.FC = () => {
   const { openSettings, apiKey } = useSettings();
+  const { saveSession, activeSession, setActiveSession } = useHistory();
   
   // --- State ---
   const [round, setRound] = useState(0);
@@ -45,6 +40,50 @@ export const PromptFormEngine: React.FC = () => {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   // --- Effects ---
+
+  // Load Active Session or Draft
+  useEffect(() => {
+    if (activeSession) {
+      // View Only Mode
+      setRound(activeSession.rounds.length);
+      // Try to find the original seed input from the first round's question
+      setSeedInput(activeSession.rounds[0]?.question || activeSession.title); 
+      setHistory(activeSession.rounds);
+      setGeneratedPrompt(activeSession.finalPrompt);
+      setFormData({});
+      setCurrentSchema(null);
+    } else {
+      // Create/Resume Mode
+      const draft = loadDraft();
+      if (draft) {
+        setRound(draft.round);
+        setSeedInput(draft.seedInput);
+        setHistory(draft.history);
+        setCurrentSchema(draft.currentSchema);
+        setFormData(draft.formData);
+        setGeneratedPrompt(null);
+      } else {
+        // Reset state
+        setRound(0);
+        setSeedInput('');
+        setHistory([]);
+        setCurrentSchema(null);
+        setFormData({});
+        setGeneratedPrompt(null);
+      }
+    }
+  }, [activeSession]);
+
+  // Autosave Draft
+  useAutosaveDraft({
+    round,
+    seedInput,
+    history,
+    currentSchema,
+    formData,
+    timestamp: Date.now()
+  }, !activeSession && !generatedPrompt);
+
   useEffect(() => {
     if (bottomRef.current) {
       bottomRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -194,6 +233,23 @@ Use Markdown for formatting.
 
       const result = await geminiProvider.generate(apiKey, metaPrompt);
       setGeneratedPrompt(result);
+
+      // Save Session
+      try {
+        const session: ArchitectSession = {
+          id: crypto.randomUUID(),
+          title: seedInput.slice(0, 50) + (seedInput.length > 50 ? '...' : ''),
+          timestamp: new Date().toISOString(),
+          rounds: fullHistory,
+          finalPrompt: result
+        };
+        
+        saveSession(session);
+        clearDraft();
+      } catch (saveError) {
+        console.error("Failed to save session:", saveError);
+      }
+
     } catch {
       setError("Failed to generate final prompt.");
     } finally {
@@ -330,26 +386,36 @@ Use Markdown for formatting.
       {/* Breadcrumbs / Progress */}
       {round > 0 && (
         <div className="sticky top-0 z-10 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md py-4 border-b border-zinc-200 dark:border-zinc-800 -mx-6 px-6">
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
-            <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border ${round > 0 ? 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800' : 'bg-zinc-100 text-zinc-500 border-zinc-200'}`}>
-                <span className="font-bold">#0</span>
-                <span>Seed</span>
+          <div className="flex items-center justify-between gap-4 pb-2">
+            <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
+              <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border ${round > 0 ? 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800' : 'bg-zinc-100 text-zinc-500 border-zinc-200'}`}>
+                  <span className="font-bold">#0</span>
+                  <span>Seed</span>
+              </div>
+              {history.map((h, i) => (
+                  <React.Fragment key={i}>
+                      <ChevronRight className="w-3 h-3 text-zinc-400 shrink-0" />
+                      <div className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-green-50 text-green-700 border border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800 whitespace-nowrap">
+                          <span className="font-bold">#{h.round}</span>
+                          <span className="truncate max-w-25">{h.schema.title}</span>
+                      </div>
+                  </React.Fragment>
+              ))}
+               <ChevronRight className="w-3 h-3 text-zinc-400 shrink-0" />
+               <div className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-zinc-900 text-zinc-50 border border-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 whitespace-nowrap animate-pulse">
+                  <span className="font-bold">#{round}</span>
+                  <span>Current</span>
+              </div>
             </div>
-            {history.map((h, i) => (
-                <React.Fragment key={i}>
-                    <ChevronRight className="w-3 h-3 text-zinc-400 shrink-0" />
-                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-green-50 text-green-700 border border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800 whitespace-nowrap">
-                        <span className="font-bold">#{h.round}</span>
-                        <span className="truncate max-w-25">{h.schema.title}</span>
-                    </div>
-                </React.Fragment>
-            ))}
-             <ChevronRight className="w-3 h-3 text-zinc-400 shrink-0" />
-             <div className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-zinc-900 text-zinc-50 border border-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 whitespace-nowrap animate-pulse">
-                <span className="font-bold">#{round}</span>
-                <span>Current</span>
-            </div>
+
+            {!activeSession && !generatedPrompt && (
+              <div className="flex items-center gap-1.5 text-xs font-medium text-zinc-400 shrink-0 animate-in fade-in duration-700 hidden sm:flex">
+                <Cloud className="w-3.5 h-3.5" />
+                <span>Draft saved</span>
+              </div>
+            )}
           </div>
+
           <div className="h-1 w-full bg-zinc-100 dark:bg-zinc-800 mt-2 rounded-full overflow-hidden">
               <div 
                 className="h-full bg-blue-600 transition-all duration-500 ease-out"

@@ -27,3 +27,27 @@ export interface PromptSchema {
   version: string;
   fields: FormField[];
 }
+
+export interface RoundHistory {
+  round: number;
+  question: string;
+  answers: Record<string, unknown>;
+  schema: PromptSchema;
+}
+
+export interface ArchitectSession {
+  id: string;
+  title: string;
+  timestamp: string;
+  rounds: RoundHistory[];
+  finalPrompt: string;
+}
+
+export interface Draft {
+  round: number;
+  seedInput: string;
+  history: RoundHistory[];
+  currentSchema: PromptSchema | null;
+  formData: Record<string, unknown>;
+  timestamp: number;
+}
