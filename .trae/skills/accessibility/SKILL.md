@@ -48,7 +48,11 @@ Comprehensive accessibility guidelines based on WCAG 2.1 and Lighthouse accessib
 
 <!-- ✅ Complex image with longer description -->
 <figure>
-  <img src="infographic.png" alt="2024 market trends infographic" aria-describedby="infographic-desc" />
+  <img
+    src="infographic.png"
+    alt="2024 market trends infographic"
+    aria-describedby="infographic-desc"
+  />
   <figcaption id="infographic-desc">
     <!-- Detailed description -->
   </figcaption>
@@ -146,8 +150,19 @@ Comprehensive accessibility guidelines based on WCAG 2.1 and Lighthouse accessib
 <!-- Video with captions -->
 <video controls>
   <source src="video.mp4" type="video/mp4" />
-  <track kind="captions" src="captions.vtt" srclang="en" label="English" default />
-  <track kind="descriptions" src="descriptions.vtt" srclang="en" label="Descriptions" />
+  <track
+    kind="captions"
+    src="captions.vtt"
+    srclang="en"
+    label="English"
+    default
+  />
+  <track
+    kind="descriptions"
+    src="descriptions.vtt"
+    srclang="en"
+    label="Descriptions"
+  />
 </video>
 
 <!-- Audio with transcript -->
@@ -188,7 +203,7 @@ element.addEventListener('keydown', (e) => {
 // Modal focus management
 function openModal(modal) {
   const focusableElements = modal.querySelectorAll(
-    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
   )
   const firstElement = focusableElements[0]
   const lastElement = focusableElements[focusableElements.length - 1]
@@ -357,8 +372,15 @@ function showSessionWarning() {
 <form novalidate>
   <div class="field" aria-live="polite">
     <label for="email">Email</label>
-    <input type="email" id="email" aria-invalid="true" aria-describedby="email-error" />
-    <p id="email-error" class="error" role="alert">Please enter a valid email address (e.g., name@example.com)</p>
+    <input
+      type="email"
+      id="email"
+      aria-invalid="true"
+      aria-describedby="email-error"
+    />
+    <p id="email-error" class="error" role="alert">
+      Please enter a valid email address (e.g., name@example.com)
+    </p>
   </div>
 </form>
 ```
@@ -424,8 +446,18 @@ form.addEventListener('submit', (e) => {
 ```html
 <!-- Custom tabs component -->
 <div role="tablist" aria-label="Product information">
-  <button role="tab" id="tab-1" aria-selected="true" aria-controls="panel-1">Description</button>
-  <button role="tab" id="tab-2" aria-selected="false" aria-controls="panel-2" tabindex="-1">Reviews</button>
+  <button role="tab" id="tab-1" aria-selected="true" aria-controls="panel-1">
+    Description
+  </button>
+  <button
+    role="tab"
+    id="tab-2"
+    aria-selected="false"
+    aria-controls="panel-2"
+    tabindex="-1"
+  >
+    Reviews
+  </button>
 </div>
 <div role="tabpanel" id="panel-1" aria-labelledby="tab-1">
   <!-- Panel content -->

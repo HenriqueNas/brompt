@@ -546,10 +546,16 @@ findNearbyButton.addEventListener('click', async () => {
 
 ```html
 <!-- Restrict powerful features -->
-<meta http-equiv="Permissions-Policy" content="geolocation=(), camera=(), microphone=()" />
+<meta
+  http-equiv="Permissions-Policy"
+  content="geolocation=(), camera=(), microphone=()"
+/>
 
 <!-- Or allow for specific origins -->
-<meta http-equiv="Permissions-Policy" content="geolocation=(self 'https://maps.example.com')" />
+<meta
+  http-equiv="Permissions-Policy"
+  content="geolocation=(self 'https://maps.example.com')"
+/>
 ```
 
 ---

@@ -30,65 +30,66 @@ Instead of staring at a blank text box, Brompt guides you through a dynamic, int
 - **Privacy First**: No backend database. Your API keys, history, and drafts live exclusively in your browser's `localStorage`.
 - **Schema-Driven**: The UI adapts in real-time based on what the AI needs to know, powered by a flexible JSON schema engine.
 
-## ✨ Key Features
+## Features
 
-- **Dynamic Form Engine**: The interface changes based on your answers. If you're writing code, it asks about languages; if you're writing a blog, it asks about tone and audience.
-- **Iterative Refinement**: A multi-round "interview" process ensuring no detail is missed.
-- **Local Persistence**: Auto-saving drafts and history management without sending data to a third-party server.
-- **Client-Side AI**: Direct integration with Google's Gemini API for fast, secure processing.
-- **Multi-Language Support**: Built-in support for English and Portuguese (easily extensible).
+- **Privacy-First**: No backend server. All data stays in your browser's `localStorage`.
+- **Multi-Provider Support**: Use your own API keys for OpenAI, Anthropic, Gemini, Mistral, or Groq.
+- **Dynamic Form Engine**: The AI asks clarifying questions to refine your request.
+- **History Management**: Save and resume past prompt engineering sessions.
+- **Export Options**: Copy the final prompt or save it for later use.
+- **Internationalization**: Support for English and Portuguese.
+- **Dark Mode**: Fully supported via Tailwind CSS.
 
-## 🛠️ Tech Stack
+## Tech Stack
 
-- **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
-- **Language**: [TypeScript](https://www.typescriptlang.org/)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-- **AI Provider**: Google Gemini API
+- **Framework**: Next.js 15 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **AI Integration**: Vercel AI SDK
 - **State Management**: React Context + Hooks
-- **Package Manager**: [pnpm](https://pnpm.io/)
+- **Icons**: Lucide React
 
-## ⚡ How It Works
-
-1.  **Seed**: You provide a high-level goal (e.g., "I want a Python script to parse CSV files").
-2.  **Analyze**: Brompt uses an LLM to analyze your goal and determine missing information.
-3.  **Refine**: The app generates a set of specific questions (using sliders, dropdowns, text inputs).
-4.  **Iterate**: You answer the questions, and the cycle repeats until the prompt is perfect.
-5.  **Generate**: Brompt compiles all context into a final, optimized prompt ready for use.
-
-## 🏁 Getting Started
+## Getting Started
 
 ### Prerequisites
 
-- Node.js (v20+)
-- pnpm (`npm install -g pnpm`)
-- A Google Gemini API Key
+- Node.js 18+
+- pnpm (recommended) or npm/yarn
 
 ### Installation
 
-1.  **Clone the repository:**
+1. Clone the repository:
 
-    ```bash
-    git clone https://github.com/your-username/brompt.git
-    cd brompt
-    ```
+   ```bash
+   git clone https://github.com/henriquenas/brompt.git
+   cd brompt
+   ```
 
-2.  **Install dependencies:**
+2. Install dependencies:
 
-    ```bash
-    pnpm install
-    ```
+   ```bash
+   pnpm install
+   ```
 
-3.  **Run the development server:**
+3. Run the development server:
 
-    ```bash
-    pnpm dev
-    ```
+   ```bash
+   pnpm dev
+   ```
 
-4.  **Open the app:**
-    Navigate to [http://localhost:3000](http://localhost:3000).
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-5.  **Enter API Key**:
-    On first launch, you'll be prompted to enter your Gemini API Key. This is stored locally in your browser.
+## Configuration
+
+Brompt requires API keys to function. You can enter your keys directly in the application settings (gear icon).
+
+- **Google Gemini**: Get a key from [Google AI Studio](https://aistudio.google.com/).
+- **OpenAI**: Get a key from [OpenAI Platform](https://platform.openai.com/).
+- **Anthropic**: Get a key from [Anthropic Console](https://console.anthropic.com/).
+- **Mistral**: Get a key from [Mistral Platform](https://console.mistral.ai/).
+- **Groq**: Get a key from [Groq Console](https://console.groq.com/).
+
+Keys are stored securely in your browser's `localStorage` and are never sent to any server other than the respective AI provider.
 
 ## 🤝 Contributing
 

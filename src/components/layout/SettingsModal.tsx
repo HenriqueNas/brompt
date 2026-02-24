@@ -1,10 +1,11 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { useSettings } from '@/contexts/SettingsContext'
-import { X } from 'lucide-react'
+import { PROVIDER_REGISTRY } from '@/lib/llm/registry'
 import { LLMProviderType } from '@/lib/llm/types'
+import { X } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
 interface SettingsModalProps {
   isOpen: boolean
@@ -16,11 +17,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const { apiKeys, setApiKey, selectedProvider, setSelectedProvider } =
     useSettings()
 
-  const [localKeys, setLocalKeys] = useState<Record<LLMProviderType, string>>({
-    gemini: '',
-    openai: '',
-    anthropic: '',
-  })
+  const [localKeys, setLocalKeys] = useState<Record<string, string>>({})
   const [localProvider, setLocalProvider] = useState<LLMProviderType>('gemini')
 
   useEffect(() => {
@@ -32,7 +29,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
   const handleSave = () => {
     // Save keys
-    ;(Object.keys(localKeys) as LLMProviderType[]).forEach((provider) => {
+    Object.keys(localKeys).forEach((provider) => {
       if (localKeys[provider] !== apiKeys[provider]) {
         setApiKey(provider, localKeys[provider])
       }
@@ -48,7 +45,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
   if (!isOpen) return null
 
-  const getProviderLabelKey = (provider: LLMProviderType) => {
+  const getProviderLabelKey = (provider: string) => {
     switch (provider) {
       case 'gemini':
         return 'settings.gemini_key_label'
@@ -56,6 +53,30 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         return 'settings.openai_key_label'
       case 'anthropic':
         return 'settings.anthropic_key_label'
+      case 'mistral':
+        return 'settings.mistral_key_label'
+      case 'groq':
+        return 'settings.groq_key_label'
+      default:
+        return 'settings.api_key_placeholder'
+    }
+  }
+
+  // Helper for placeholder
+  const getPlaceholder = (provider: string) => {
+    switch (provider) {
+      case 'openai':
+        return 'sk-...'
+      case 'anthropic':
+        return 'sk-ant-...'
+      case 'gemini':
+        return 'AIzaSy...'
+      case 'mistral':
+        return '...'
+      case 'groq':
+        return 'gsk_...'
+      default:
+        return '...'
     }
   }
 
@@ -89,9 +110,11 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               }
               className='w-full rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800'
             >
-              <option value='gemini'>Google Gemini</option>
-              <option value='openai'>OpenAI</option>
-              <option value='anthropic'>Anthropic Claude</option>
+              {PROVIDER_REGISTRY.map((provider) => (
+                <option key={provider.id} value={provider.id}>
+                  {provider.displayName}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -106,14 +129,14 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             <input
               id='api-key-input'
               type='password'
-              value={localKeys[localProvider]}
+              value={localKeys[localProvider] || ''}
               onChange={(e) =>
                 setLocalKeys((prev) => ({
                   ...prev,
                   [localProvider]: e.target.value,
                 }))
               }
-              placeholder={t('settings.api_key_placeholder')}
+              placeholder={getPlaceholder(localProvider)}
               className='w-full rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800'
             />
           </div>
