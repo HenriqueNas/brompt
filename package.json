@@ -1,7 +1,9 @@
 {
-  "name": "template-c1",
+  "name": "brompt",
+  "description": "High-Efficiency Prompt Engineering Toolkit",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
