@@ -70,6 +70,39 @@ describe('SettingsModal Integration', () => {
     expect(onClose).toHaveBeenCalled()
   })
 
+  it('should switch provider and save new provider key', async () => {
+    const onClose = vi.fn()
+
+    render(
+      <Providers>
+        <SettingsModal isOpen={true} onClose={onClose} />
+      </Providers>
+    )
+
+    // Switch to OpenAI
+    const providerSelect = screen.getByLabelText(/AI Provider/i)
+    fireEvent.change(providerSelect, { target: { value: 'openai' } })
+
+    // Check if label updated
+    expect(screen.getByLabelText(/OpenAI API Key/i)).toBeInTheDocument()
+
+    // Enter key
+    const input = screen.getByLabelText(/OpenAI API Key/i)
+    fireEvent.change(input, { target: { value: 'sk-openai-key' } })
+
+    // Save
+    const saveButton = screen.getByRole('button', { name: /Save/i })
+    fireEvent.click(saveButton)
+
+    // Verify storage updated
+    expect(storage.setItem).toHaveBeenCalledWith(
+      'openai_api_key',
+      'sk-openai-key'
+    )
+    expect(storage.setItem).toHaveBeenCalledWith('selected_provider', 'openai')
+    expect(onClose).toHaveBeenCalled()
+  })
+
   it('should not render when isOpen is false', () => {
     render(
       <Providers>
@@ -80,5 +113,29 @@ describe('SettingsModal Integration', () => {
     expect(
       screen.queryByRole('heading', { name: /Settings/i })
     ).not.toBeInTheDocument()
+  })
+
+  it('should not save unchanged API keys', () => {
+    vi.mocked(storage.getItem).mockImplementation((key, defaultValue) => {
+      if (key === 'gemini_api_key') return 'initial-key'
+      if (key === 'language') return 'en'
+      return defaultValue
+    })
+
+    const onClose = vi.fn()
+    render(
+      <Providers>
+        <SettingsModal isOpen={true} onClose={onClose} />
+      </Providers>
+    )
+
+    const saveButton = screen.getByRole('button', { name: /Save/i })
+    fireEvent.click(saveButton)
+
+    expect(storage.setItem).not.toHaveBeenCalledWith(
+      'gemini_api_key',
+      'initial-key'
+    )
+    expect(onClose).toHaveBeenCalled()
   })
 })

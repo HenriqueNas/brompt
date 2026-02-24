@@ -9,15 +9,6 @@ export default defineConfig({
     setupFiles: './test/setup.ts',
     include: ['test/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     globals: true,
-    server: {
-      deps: {
-        inline: [
-          '@thesysai/genui-sdk',
-          '@crayonai/react-ui',
-          '@crayonai/react-core',
-        ],
-      },
-    },
   },
   resolve: {
     alias: [

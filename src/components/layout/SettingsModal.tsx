@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { useSettings } from '@/contexts/SettingsContext'
 import { X } from 'lucide-react'
+import { LLMProviderType } from '@/lib/llm/types'
 
 interface SettingsModalProps {
   isOpen: boolean
@@ -12,21 +13,51 @@ interface SettingsModalProps {
 
 export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const { t, language, setLanguage } = useLanguage()
-  const { apiKey, setApiKey } = useSettings()
-  const [localKey, setLocalKey] = useState('')
+  const { apiKeys, setApiKey, selectedProvider, setSelectedProvider } =
+    useSettings()
+
+  const [localKeys, setLocalKeys] = useState<Record<LLMProviderType, string>>({
+    gemini: '',
+    openai: '',
+    anthropic: '',
+  })
+  const [localProvider, setLocalProvider] = useState<LLMProviderType>('gemini')
 
   useEffect(() => {
     if (isOpen) {
-      setLocalKey(apiKey)
+      setLocalKeys(apiKeys)
+      setLocalProvider(selectedProvider)
     }
-  }, [isOpen, apiKey])
+  }, [isOpen, apiKeys, selectedProvider])
 
   const handleSave = () => {
-    setApiKey(localKey)
+    // Save keys
+    ;(Object.keys(localKeys) as LLMProviderType[]).forEach((provider) => {
+      if (localKeys[provider] !== apiKeys[provider]) {
+        setApiKey(provider, localKeys[provider])
+      }
+    })
+
+    // Save selected provider
+    if (localProvider !== selectedProvider) {
+      setSelectedProvider(localProvider)
+    }
+
     onClose()
   }
 
   if (!isOpen) return null
+
+  const getProviderLabelKey = (provider: LLMProviderType) => {
+    switch (provider) {
+      case 'gemini':
+        return 'settings.gemini_key_label'
+      case 'openai':
+        return 'settings.openai_key_label'
+      case 'anthropic':
+        return 'settings.anthropic_key_label'
+    }
+  }
 
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm'>
@@ -42,23 +73,52 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         </div>
 
         <div className='space-y-4'>
+          {/* Provider Selection */}
+          <div>
+            <label
+              htmlFor='provider-select'
+              className='mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300'
+            >
+              {t('settings.provider_label')}
+            </label>
+            <select
+              id='provider-select'
+              value={localProvider}
+              onChange={(e) =>
+                setLocalProvider(e.target.value as LLMProviderType)
+              }
+              className='w-full rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800'
+            >
+              <option value='gemini'>Google Gemini</option>
+              <option value='openai'>OpenAI</option>
+              <option value='anthropic'>Anthropic Claude</option>
+            </select>
+          </div>
+
+          {/* API Key Input */}
           <div>
             <label
               htmlFor='api-key-input'
               className='mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300'
             >
-              {t('settings.api_key_label')}
+              {t(getProviderLabelKey(localProvider))}
             </label>
             <input
               id='api-key-input'
               type='password'
-              value={localKey}
-              onChange={(e) => setLocalKey(e.target.value)}
+              value={localKeys[localProvider]}
+              onChange={(e) =>
+                setLocalKeys((prev) => ({
+                  ...prev,
+                  [localProvider]: e.target.value,
+                }))
+              }
               placeholder={t('settings.api_key_placeholder')}
               className='w-full rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800'
             />
           </div>
 
+          {/* Language Selection */}
           <div>
             <label
               htmlFor='language-select'

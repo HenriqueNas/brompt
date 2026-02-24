@@ -1,5 +1,8 @@
 export type StorageKey =
   | 'gemini_api_key'
+  | 'openai_api_key'
+  | 'anthropic_api_key'
+  | 'selected_provider'
   | 'language'
   | 'theme'
   | 'history'
