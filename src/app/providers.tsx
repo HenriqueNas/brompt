@@ -4,7 +4,6 @@ import { HistoryProvider } from '@/contexts/HistoryContext'
 import { LanguageProvider } from '@/contexts/LanguageContext'
 import { SettingsProvider } from '@/contexts/SettingsContext'
 import { ToastProvider } from '@/contexts/ToastContext'
-import { ThemeProvider } from '@thesysai/genui-sdk'
 import React from 'react'
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -12,9 +11,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <LanguageProvider>
       <SettingsProvider>
         <HistoryProvider>
-          <ToastProvider>
-            <ThemeProvider mode='dark'>{children}</ThemeProvider>
-          </ToastProvider>
+          <ToastProvider>{children}</ToastProvider>
         </HistoryProvider>
       </SettingsProvider>
     </LanguageProvider>
