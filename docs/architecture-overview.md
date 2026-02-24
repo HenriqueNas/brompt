@@ -16,18 +16,18 @@ Brompt is a client-side Single Page Application (SPA) built with Next.js. It foc
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
 - **State Management**: React Context + Hooks
-- **AI Provider**: Google Gemini API (via client-side SDK)
+- **AI Providers**: Google Gemini, OpenAI, Anthropic (via client-side SDKs)
 - **Icons**: Lucide React
 
 ## Data Flow
 
 1.  **User Input (Seed)**: User provides an initial goal (e.g., "I want to write a blog post").
-2.  **LLM Processing (Analysis)**: The app sends this goal to Gemini with a system prompt to analyze requirements.
-3.  **Schema Generation**: Gemini returns a JSON schema defining the next set of questions (fields).
+2.  **LLM Processing (Analysis)**: The app sends this goal to the selected AI provider (Gemini, OpenAI, or Anthropic) with a system prompt to analyze requirements.
+3.  **Schema Generation**: The AI provider returns a JSON schema defining the next set of questions (fields).
 4.  **Dynamic Rendering**: `PromptFormEngine` parses the schema and renders appropriate UI components (Text, Select, Slider, etc.).
 5.  **User Response**: User fills out the form.
 6.  **Loop**: Steps 2-5 repeat for up to 10 rounds or until the user finishes.
-7.  **Final Generation**: The app sends the entire conversation history to Gemini to generate the final optimized prompt.
+7.  **Final Generation**: The app sends the entire conversation history to the AI provider to generate the final optimized prompt.
 
 ## Directory Structure
 
@@ -47,6 +47,6 @@ src/
 ## Key Components
 
 - **`PromptFormEngine`**: The heart of the application. Manages the conversation loop, state, and rendering of dynamic fields.
-- **`GeminiProvider`**: Handles communication with Google's Generative AI. Implements fallback logic for different model versions (Flash, Pro).
+- **`LLMProvider`**: Interface implemented by `GeminiProvider`, `OpenAIProvider`, and `AnthropicProvider` to handle communication with respective AI services.
 - **`HistoryContext`**: Manages persistence of past sessions in `localStorage`.
 - **`SettingsContext`**: Handles global configuration like API keys and language preferences.

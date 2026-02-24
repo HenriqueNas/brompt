@@ -7,7 +7,7 @@ This document outlines the primary user flows within the Brompt application.
 1.  **Landing**: User arrives at the application.
 2.  **API Key Requirement**:
     - If no API key is found in `localStorage`, the app blocks the main interface.
-    - User is prompted to enter their Google Gemini API Key.
+    - User is prompted to enter their API Key (Gemini, OpenAI, or Anthropic).
     - Key is saved locally to `localStorage`.
 
 ## 2. Creating a Prompt (The Loop)
@@ -75,5 +75,6 @@ This document outlines the primary user flows within the Brompt application.
 ## 5. Settings
 
 - **Language**: Toggle between English and Portuguese.
-- **API Key**: Update or remove the stored Gemini API Key.
+- **AI Provider**: Switch between Gemini, OpenAI, and Anthropic.
+- **API Keys**: Manage API keys for each provider.
 - **Theme**: Toggle Dark/Light mode (system default initially).

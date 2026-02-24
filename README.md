@@ -35,7 +35,7 @@ Instead of staring at a blank text box, Brompt guides you through a dynamic, int
 - **Dynamic Form Engine**: The interface changes based on your answers. If you're writing code, it asks about languages; if you're writing a blog, it asks about tone and audience.
 - **Iterative Refinement**: A multi-round "interview" process ensuring no detail is missed.
 - **Local Persistence**: Auto-saving drafts and history management without sending data to a third-party server.
-- **Client-Side AI**: Direct integration with Google's Gemini API for fast, secure processing.
+- **Client-Side AI**: Direct integration with Google Gemini, OpenAI, and Anthropic for fast, secure processing.
 - **Multi-Language Support**: Built-in support for English and Portuguese (easily extensible).
 
 ## 🛠️ Tech Stack
@@ -43,7 +43,7 @@ Instead of staring at a blank text box, Brompt guides you through a dynamic, int
 - **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-- **AI Provider**: Google Gemini API
+- **AI Providers**: Google Gemini, OpenAI, Anthropic
 - **State Management**: React Context + Hooks
 - **Package Manager**: [pnpm](https://pnpm.io/)
 
@@ -61,7 +61,7 @@ Instead of staring at a blank text box, Brompt guides you through a dynamic, int
 
 - Node.js (v20+)
 - pnpm (`npm install -g pnpm`)
-- A Google Gemini API Key
+- An API Key (Google Gemini, OpenAI, or Anthropic)
 
 ### Installation
 
@@ -88,7 +88,7 @@ Instead of staring at a blank text box, Brompt guides you through a dynamic, int
     Navigate to [http://localhost:3000](http://localhost:3000).
 
 5.  **Enter API Key**:
-    On first launch, you'll be prompted to enter your Gemini API Key. This is stored locally in your browser.
+    On first launch, you'll be prompted to enter your API Key (Gemini, OpenAI, or Anthropic). This is stored locally in your browser.
 
 ## 🤝 Contributing
 
