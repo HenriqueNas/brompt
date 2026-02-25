@@ -7,6 +7,7 @@ This directory contains shared utility functions, API clients, and configuration
 - **LLM Provider Layer**: Unified interface for interacting with multiple AI providers (OpenAI, Anthropic, Gemini, Mistral, Groq).
 - **Vercel AI SDK Integration**: Uses `ai` SDK for standardized generation and streaming.
 - **LocalStorage Helpers**: Wrappers for saving/loading data from localStorage.
+- **Crypto Helpers**: Web Crypto utilities for AES‑GCM + PBKDF2 encryption of API keys.
 - **Constants**: Shared constants and types.
 
 ## LLM Architecture

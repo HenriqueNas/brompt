@@ -38,19 +38,25 @@ src/
 ├── components/          # Shared UI components
 ├── contexts/            # Global state (History, Settings, Toast)
 ├── features/            # Feature-specific logic
-│   ├── form/            # Core Form Engine & Schema
-│   ├── history/         # History management
-│   └── output/          # Markdown rendering
 ├── lib/                 # Utilities & API providers
 │   ├── llm/             # Provider Registry & Adapters
-│   └── storage.ts       # LocalStorage wrapper
+│   ├── crypto.ts        # Web Crypto helpers (AES‑GCM + PBKDF2)
+│   └── storage.ts       # LocalStorage wrapper (typed)
+├── components/settings/ # Settings subcomponents (ProviderSelect, ApiKeyField, SecuritySection, LanguageSelect)
 └── locales/             # i18n JSON files
 ```
 
 ## Key Components
 
 - **`PromptFormEngine`**: The heart of the application. Manages the conversation loop, state, and rendering of dynamic fields.
-- **`SettingsContext`**: Handles global configuration, API keys, and provider selection.
+- **`SettingsContext` + `useSettingsController`**: Global configuration, API keys, provider selection, encryption unlock/reset flows.
 - **`ProviderRegistry`**: Defines available LLM providers and models (`src/lib/llm/registry.ts`).
 - **`AISDKAdapter`**: Generic adapter for Vercel AI SDK providers.
 - **`HistoryContext`**: Manages persistence of past sessions in `localStorage`.
+- **`UnlockModal`**: Blocks UI until the user enters a valid passphrase when encrypted keys are detected.
+
+## Security Model
+
+- API keys are encrypted at rest in `localStorage` using AES‑GCM and PBKDF2 (Web Crypto API).
+- Passphrase is never persisted; decryption happens in memory at unlock.
+- Passphrase changes trigger atomic re‑encryption for all providers to maintain consistency.
