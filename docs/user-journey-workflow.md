@@ -9,7 +9,12 @@ This document outlines the primary user flows within the Brompt application.
     - User opens Settings (gear icon).
     - Selects an AI Provider (Gemini, OpenAI, Anthropic, Mistral, Groq).
     - Enters the corresponding API Key.
-    - Key is saved locally to `localStorage`.
+    - Creates a Passphrase to encrypt keys at rest.
+    - Keys are saved encrypted to `localStorage`.
+3.  **Unlock (Revisit)**:
+    - When encrypted keys are detected, the app shows the Unlock modal.
+    - User enters the passphrase to unlock; keys are decrypted in memory for the session.
+    - If the passphrase is forgotten, user can reset all keys and set a new passphrase.
 
 ## 2. Creating a Prompt (The Loop)
 
@@ -78,5 +83,6 @@ This document outlines the primary user flows within the Brompt application.
 - **Language**: Toggle between English and Portuguese.
 - **AI Provider**: Switch between supported providers (Gemini, OpenAI, Anthropic, Mistral, Groq).
 - **Model Selection**: Choose specific models (e.g., GPT-4o, Claude 3.5 Sonnet) for the selected provider.
-- **API Keys**: Manage keys for each provider independently.
+- **API Keys**: Manage keys for each provider independently (stored encrypted).
+- **Security**: Create/change passphrase, unlock keys, or reset all keys.
 - **Theme**: Toggle Dark/Light mode (system default initially).

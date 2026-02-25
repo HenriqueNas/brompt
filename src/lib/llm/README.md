@@ -36,5 +36,11 @@ Concrete instances of the adapters, pre-configured for specific services.
 
 1.  Add the provider configuration to `PROVIDER_REGISTRY` in `registry.ts`.
 2.  If supported by Vercel AI SDK, create a new instance in `providers/<name>.ts` using `AISDKAdapter`.
-3.  Add the API key to `SettingsContext` and `SettingsModal`.
+3.  Integrate the provider’s API key management via `SettingsContext` (backed by `useSettingsController`) and `SettingsModal`.
 4.  Update locale files (`en.json`, `pt.json`) with the new label.
+
+## Notes on Security
+
+- API keys are persisted encrypted in `localStorage` using AES‑GCM with PBKDF2 (Web Crypto API).
+- Unlock requires a user passphrase; keys are decrypted into memory for the session only.
+- Changing the passphrase re‑encrypts all stored provider keys atomically to prevent inconsistency.

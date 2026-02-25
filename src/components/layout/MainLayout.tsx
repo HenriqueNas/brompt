@@ -1,9 +1,10 @@
 'use client'
 
-import React from 'react'
-import { Sidebar } from './Sidebar'
-import { SettingsModal } from './SettingsModal'
 import { useSettings } from '@/contexts/SettingsContext'
+import React from 'react'
+import { SettingsModal } from './SettingsModal'
+import { Sidebar } from './Sidebar'
+import { UnlockModal } from './UnlockModal'
 
 interface MainLayoutProps {
   children: React.ReactNode
@@ -21,6 +22,7 @@ export function MainLayout({ children }: MainLayoutProps) {
       </main>
 
       <SettingsModal isOpen={isSettingsOpen} onClose={closeSettings} />
+      <UnlockModal />
     </div>
   )
 }

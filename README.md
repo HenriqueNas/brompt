@@ -84,7 +84,14 @@ Brompt requires API keys to function. You can enter your keys directly in the ap
 - **Mistral**: Get a key from [Mistral Platform](https://console.mistral.ai/).
 - **Groq**: Get a key from [Groq Console](https://console.groq.com/).
 
-Keys are stored securely in your browser's `localStorage` and are never sent to any server other than the respective AI provider.
+Keys are stored encrypted in your browser's `localStorage` and are never sent to any server other than the respective AI provider.
+
+### Security: API Key Encryption
+
+- **Passphrase Setup**: When you first save an API key, you will be prompted to create a passphrase. The app uses AES‑GCM with PBKDF2 (Web Crypto API) to encrypt keys at rest.
+- **Unlock Flow**: On subsequent visits, you must enter your passphrase to unlock your keys. The keys are decrypted in memory for the session only.
+- **Reset**: If you forget your passphrase, use “Reset all keys” in the unlock modal to clear stored keys and set a new passphrase.
+- **Multiple Providers**: Changing the passphrase re‑encrypts all provider keys atomically to keep them consistent.
 
 ## Contributing
 
@@ -96,8 +103,8 @@ Please read our [CONTRIBUTING.md](docs/CONTRIBUTING.md) for details on our code 
 
 For more detailed information about the project structure and workflows, check out the `/docs` directory:
 
-- [Architecture Overview](docs/architecture/overview.md)
-- [User Workflow](docs/workflow/user-journey.md)
+- Architecture Overview: [docs/architecture-overview.md](docs/architecture-overview.md)
+- User Workflow: [docs/user-journey-workflow.md](docs/user-journey-workflow.md)
 
 ## 📜 License
 

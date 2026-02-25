@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { Providers } from '../../src/app/providers'
 import { SettingsModal } from '../../src/components/layout/SettingsModal'
@@ -11,6 +11,13 @@ vi.mock('../../src/lib/storage', () => ({
     setItem: vi.fn(),
     removeItem: vi.fn(),
   },
+}))
+
+// Mock crypto to avoid Web Crypto in JSDOM and ensure encrypt returns a value
+vi.mock('../../src/lib/crypto', () => ({
+  encrypt: vi.fn().mockResolvedValue('mock-encrypted'),
+  decrypt: vi.fn(),
+  isEncrypted: vi.fn().mockReturnValue(false),
 }))
 
 describe('SettingsModal Integration', () => {
@@ -56,18 +63,26 @@ describe('SettingsModal Integration', () => {
 
     const input = screen.getByLabelText(/Gemini API Key/i)
     fireEvent.change(input, { target: { value: 'new-api-key' } })
+    const pass1 = screen.getByLabelText(/Create Passphrase/i)
+    const pass2 = screen.getByLabelText(/Confirm Passphrase/i)
+    fireEvent.change(pass1, { target: { value: 'secret' } })
+    fireEvent.change(pass2, { target: { value: 'secret' } })
 
     const saveButton = screen.getByRole('button', { name: /Save/i })
     fireEvent.click(saveButton)
 
     // Verify storage was updated
-    expect(storage.setItem).toHaveBeenCalledWith(
-      'gemini_api_key',
-      'new-api-key'
-    )
+    await waitFor(() => {
+      const calls = vi.mocked(storage.setItem).mock.calls
+      const geminiCall = calls.find((c) => c[0] === 'gemini_api_key')
+      expect(geminiCall).toBeTruthy()
+      expect(typeof geminiCall?.[1]).toBe('string')
+    })
 
     // Verify modal was closed
-    expect(onClose).toHaveBeenCalled()
+    await waitFor(() => {
+      expect(onClose).toHaveBeenCalled()
+    })
   })
 
   it('should switch provider and save new provider key', async () => {
@@ -89,18 +104,27 @@ describe('SettingsModal Integration', () => {
     // Enter key
     const input = screen.getByLabelText(/OpenAI API Key/i)
     fireEvent.change(input, { target: { value: 'sk-openai-key' } })
+    const pass1 = screen.getByLabelText(/Create Passphrase/i)
+    const pass2 = screen.getByLabelText(/Confirm Passphrase/i)
+    fireEvent.change(pass1, { target: { value: 'secret' } })
+    fireEvent.change(pass2, { target: { value: 'secret' } })
 
     // Save
     const saveButton = screen.getByRole('button', { name: /Save/i })
     fireEvent.click(saveButton)
 
     // Verify storage updated
-    expect(storage.setItem).toHaveBeenCalledWith(
-      'openai_api_key',
-      'sk-openai-key'
-    )
-    expect(storage.setItem).toHaveBeenCalledWith('selected_provider', 'openai')
-    expect(onClose).toHaveBeenCalled()
+    await waitFor(() => {
+      const calls = vi.mocked(storage.setItem).mock.calls
+      const openaiCall = calls.find((c) => c[0] === 'openai_api_key')
+      expect(openaiCall).toBeTruthy()
+      expect(typeof openaiCall?.[1]).toBe('string')
+      expect(storage.setItem).toHaveBeenCalledWith(
+        'selected_provider',
+        'openai'
+      )
+      expect(onClose).toHaveBeenCalled()
+    })
   })
 
   it('should not render when isOpen is false', () => {
@@ -115,7 +139,7 @@ describe('SettingsModal Integration', () => {
     ).not.toBeInTheDocument()
   })
 
-  it('should not save unchanged API keys', () => {
+  it('should not save unchanged API keys', async () => {
     vi.mocked(storage.getItem).mockImplementation((key, defaultValue) => {
       if (key === 'gemini_api_key') return 'initial-key'
       if (key === 'language') return 'en'
@@ -129,13 +153,19 @@ describe('SettingsModal Integration', () => {
       </Providers>
     )
 
+    const pass1 = screen.getByLabelText(/Create Passphrase/i)
+    const pass2 = screen.getByLabelText(/Confirm Passphrase/i)
+    fireEvent.change(pass1, { target: { value: 'secret' } })
+    fireEvent.change(pass2, { target: { value: 'secret' } })
     const saveButton = screen.getByRole('button', { name: /Save/i })
     fireEvent.click(saveButton)
 
-    expect(storage.setItem).not.toHaveBeenCalledWith(
-      'gemini_api_key',
-      'initial-key'
-    )
-    expect(onClose).toHaveBeenCalled()
+    await waitFor(() => {
+      expect(storage.setItem).not.toHaveBeenCalledWith(
+        'gemini_api_key',
+        'initial-key'
+      )
+      expect(onClose).toHaveBeenCalled()
+    })
   })
 })
