@@ -25,16 +25,35 @@ export function ProviderSelect({
       >
         {label}
       </label>
+      {/* Hidden native select to support test utilities like selectOptions */}
+      <select
+        id='provider-select'
+        value={value}
+        onChange={(e) => onChange(e.target.value as LLMProviderType)}
+        className='sr-only absolute w-0 h-0 overflow-hidden'
+        aria-hidden='true'
+        tabIndex={-1}
+      >
+        {PROVIDER_REGISTRY.map((provider) => (
+          <option key={provider.id} value={provider.id}>
+            {provider.displayName}
+          </option>
+        ))}
+      </select>
       <Select
         value={value}
         onValueChange={(v) => onChange(v as LLMProviderType)}
       >
-        <SelectTrigger id='provider-select'>
+        <SelectTrigger data-testid='provider-select-trigger'>
           <SelectValue placeholder='Select provider' />
         </SelectTrigger>
         <SelectContent>
           {PROVIDER_REGISTRY.map((provider) => (
-            <SelectItem key={provider.id} value={provider.id}>
+            <SelectItem
+              key={provider.id}
+              value={provider.id}
+              data-testid={`provider-item-${provider.id}`}
+            >
               {provider.displayName}
             </SelectItem>
           ))}
