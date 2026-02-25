@@ -4,7 +4,7 @@ import {
   RiCheckboxCircleLine,
   RiCloseLine,
   RiErrorWarningLine,
-  RiInformationLine,
+  RiInformation2Line,
 } from '@remixicon/react'
 import {
   createContext,
@@ -76,7 +76,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                     <RiErrorWarningLine className='text-xl' />
                   )}
                   {toast.type === 'info' && (
-                    <RiInformationLine className='text-xl' />
+                    <RiInformation2Line className='text-xl' />
                   )}
                   <p className='text-sm font-medium'>{toast.message}</p>
                 </div>
