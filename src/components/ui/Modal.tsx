@@ -1,6 +1,6 @@
 'use client'
 
-import { X } from 'lucide-react'
+import { RiCloseLine } from '@remixicon/react'
 import React, { useEffect } from 'react'
 import { createPortal } from 'react-dom'
 
@@ -50,7 +50,7 @@ export function Modal({
             className='text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors'
             aria-label='Close'
           >
-            <X size={24} />
+            <RiCloseLine className='text-2xl' />
           </button>
         </div>
 

@@ -3,7 +3,7 @@
 import { useLanguage } from '@/contexts/LanguageContext'
 import { useSettings } from '@/contexts/SettingsContext'
 import { LLMProviderType } from '@/lib/llm/types'
-import { X } from 'lucide-react'
+import { RiCloseLine } from '@remixicon/react'
 import { useEffect, useState } from 'react'
 import { ApiKeyField } from '../settings/ApiKeyField'
 import { LanguageSelect } from '../settings/LanguageSelect'
@@ -157,7 +157,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             onClick={onClose}
             className='text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'
           >
-            <X size={24} />
+            <RiCloseLine className='text-2xl' />
           </button>
         </div>
 

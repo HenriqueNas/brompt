@@ -4,7 +4,15 @@ import { Modal } from '@/components/ui/Modal'
 import { useHistory } from '@/contexts/HistoryContext'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { clearDraft, loadDraft } from '@/features/form/useAutosaveDraft'
-import { Inbox, MessageSquare, Plus, Search, Settings } from 'lucide-react'
+import {
+  RiAddLine,
+  RiInboxLine,
+  RiLayoutGridLine,
+  RiMessage3Line,
+  RiSearchLine,
+  RiSettingsLine,
+} from '@remixicon/react'
+import Link from 'next/link'
 import { useState } from 'react'
 
 interface SidebarProps {
@@ -83,12 +91,12 @@ export function Sidebar({ onSettingsClick }: SidebarProps) {
             onClick={handleNewChatClick}
             className='flex w-full items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors shadow-sm'
           >
-            <Plus size={16} />
+            <RiAddLine className='text-base' />
             {t('sidebar.new_chat')}
           </button>
 
           <div className='relative'>
-            <Search className='absolute left-2.5 top-2.5 h-4 w-4 text-zinc-400' />
+            <RiSearchLine className='absolute left-2.5 top-2.5 text-base text-zinc-400' />
             <input
               type='text'
               placeholder={t('sidebar.search_placeholder')}
@@ -116,16 +124,15 @@ export function Sidebar({ onSettingsClick }: SidebarProps) {
                       : 'text-zinc-600 hover:bg-zinc-200 dark:text-zinc-400 dark:hover:bg-zinc-800'
                   }`}
                 >
-                  <MessageSquare
-                    size={16}
-                    className={`shrink-0 ${activeSession?.id === session.id ? 'text-blue-600 dark:text-blue-400' : 'text-zinc-400 group-hover:text-zinc-600 dark:text-zinc-500 dark:group-hover:text-zinc-300'}`}
+                  <RiMessage3Line
+                    className={`text-base shrink-0 ${activeSession?.id === session.id ? 'text-blue-600 dark:text-blue-400' : 'text-zinc-400 group-hover:text-zinc-600 dark:text-zinc-500 dark:group-hover:text-zinc-300'}`}
                   />
                   <span className='truncate'>{session.title}</span>
                 </button>
               ))
             ) : (
               <div className='flex flex-col items-center justify-center py-12 text-zinc-400 space-y-2 opacity-60'>
-                <Inbox size={32} strokeWidth={1.5} />
+                <RiInboxLine className='text-3xl' />
                 <span className='text-xs'>
                   {history.length === 0
                     ? t('sidebar.no_history')
@@ -136,12 +143,19 @@ export function Sidebar({ onSettingsClick }: SidebarProps) {
           </div>
         </div>
 
-        <div className='border-t border-zinc-200 p-4 dark:border-zinc-800'>
+        <div className='border-t border-zinc-200 p-4 dark:border-zinc-800 space-y-1'>
+          <Link
+            href='/components'
+            className='flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-200 dark:text-zinc-300 dark:hover:bg-zinc-800'
+          >
+            <RiLayoutGridLine className='text-base' />
+            Components
+          </Link>
           <button
             onClick={onSettingsClick}
             className='flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-200 dark:text-zinc-300 dark:hover:bg-zinc-800'
           >
-            <Settings size={16} />
+            <RiSettingsLine className='text-base' />
             {t('sidebar.settings')}
           </button>
         </div>

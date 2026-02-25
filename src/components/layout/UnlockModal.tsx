@@ -3,7 +3,7 @@
 import { useLanguage } from '@/contexts/LanguageContext'
 import { useSettings } from '@/contexts/SettingsContext'
 import { useToast } from '@/contexts/ToastContext'
-import { Lock, RefreshCw, Trash2 } from 'lucide-react'
+import { RiDeleteBinLine, RiLockLine, RiRefreshLine } from '@remixicon/react'
 import { useState } from 'react'
 
 export function UnlockModal() {
@@ -47,7 +47,7 @@ export function UnlockModal() {
       <div className='w-full max-w-md rounded-xl bg-white p-6 shadow-2xl dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800'>
         <div className='flex flex-col items-center text-center space-y-4'>
           <div className='p-3 bg-blue-100 text-blue-600 rounded-full dark:bg-blue-900/30 dark:text-blue-400'>
-            <Lock className='w-8 h-8' />
+            <RiLockLine className='text-3xl' />
           </div>
 
           <h2 className='text-xl font-bold text-zinc-900 dark:text-zinc-50'>
@@ -78,7 +78,7 @@ export function UnlockModal() {
                 className='w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'
               >
                 {isLoading ? (
-                  <RefreshCw className='w-4 h-4 animate-spin' />
+                  <RiRefreshLine className='text-base animate-spin' />
                 ) : (
                   t('settings.unlock_button') || 'Unlock'
                 )}
@@ -111,7 +111,7 @@ export function UnlockModal() {
                   onClick={handleReset}
                   className='flex-1 py-2 px-4 bg-red-600 hover:bg-red-700 text-white rounded-md font-medium transition-colors flex items-center justify-center gap-2'
                 >
-                  <Trash2 className='w-4 h-4' />
+                  <RiDeleteBinLine className='text-base' />
                   {t('settings.confirm_reset') || 'Reset All'}
                 </button>
               </div>

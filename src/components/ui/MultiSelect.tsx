@@ -1,7 +1,7 @@
+import { RiCloseLine } from '@remixicon/react'
 import * as React from 'react'
-import { X } from 'lucide-react'
 
-import { cn } from '@/components/utils'
+import { cn } from '@/lib/utils'
 
 interface MultiSelectProps {
   value: string[]
@@ -58,7 +58,7 @@ export function MultiSelect({
             className='ml-0.5 text-slate-400 hover:text-slate-200 focus:outline-none'
             aria-label={`Remove ${val}`}
           >
-            <X className='h-3 w-3' />
+            <RiCloseLine className='text-xs' />
           </button>
         </span>
       ))}

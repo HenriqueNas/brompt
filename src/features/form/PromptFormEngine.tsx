@@ -1,13 +1,13 @@
 import {
-  AlertCircle,
-  ArrowRight,
-  ChevronRight,
-  Cloud,
-  Loader2,
-  RefreshCcw,
-  Settings,
-  Sparkles,
-} from 'lucide-react'
+  RiArrowRightLine,
+  RiArrowRightSLine,
+  RiCloudLine,
+  RiErrorWarningLine,
+  RiLoader4Line,
+  RiRefreshLine,
+  RiSettingsLine,
+  RiSparklingLine,
+} from '@remixicon/react'
 import React, { useEffect, useRef, useState } from 'react'
 import { useHistory } from '../../contexts/HistoryContext'
 import { useLanguage } from '../../contexts/LanguageContext'
@@ -478,7 +478,7 @@ The prompt should be written in ${langInstruction}, unless the user explicitly r
     return (
       <div className='flex flex-col items-center justify-center py-20 text-center space-y-6'>
         <div className='p-4 rounded-full bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400'>
-          <AlertCircle className='w-12 h-12' />
+          <RiErrorWarningLine className='text-5xl' />
         </div>
         <div className='space-y-2'>
           <h2 className='text-2xl font-bold text-zinc-900 dark:text-zinc-50'>
@@ -492,7 +492,7 @@ The prompt should be written in ${langInstruction}, unless the user explicitly r
           onClick={openSettings}
           className='flex items-center gap-2 px-6 py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors shadow-lg shadow-blue-500/20'
         >
-          <Settings className='w-5 h-5' />
+          <RiSettingsLine className='text-xl' />
           {t('form.open_settings')}
         </button>
       </div>
@@ -542,14 +542,14 @@ The prompt should be written in ${langInstruction}, unless the user explicitly r
               </div>
               {history.map((h, i) => (
                 <React.Fragment key={i}>
-                  <ChevronRight className='w-3 h-3 text-zinc-400 shrink-0' />
+                  <RiArrowRightSLine className='text-xs text-zinc-400 shrink-0' />
                   <div className='flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-green-50 text-green-700 border border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800 whitespace-nowrap'>
                     <span className='font-bold'>#{h.round}</span>
                     <span className='truncate max-w-25'>{h.schema.title}</span>
                   </div>
                 </React.Fragment>
               ))}
-              <ChevronRight className='w-3 h-3 text-zinc-400 shrink-0' />
+              <RiArrowRightSLine className='text-xs text-zinc-400 shrink-0' />
               <div className='flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-zinc-900 text-zinc-50 border border-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 whitespace-nowrap animate-pulse'>
                 <span className='font-bold'>#{round}</span>
                 <span>Current</span>
@@ -558,7 +558,7 @@ The prompt should be written in ${langInstruction}, unless the user explicitly r
 
             {!activeSession && !generatedPrompt && (
               <div className='hidden sm:flex items-center gap-1.5 text-xs font-medium text-zinc-400 shrink-0 animate-in fade-in duration-700'>
-                <Cloud className='w-3.5 h-3.5' />
+                <RiCloudLine className='text-sm' />
                 <span>{t('form.draft_saved')}</span>
               </div>
             )}
@@ -613,13 +613,13 @@ The prompt should be written in ${langInstruction}, unless the user explicitly r
           >
             {isGenerating ? (
               <>
-                <Loader2 className='w-6 h-6 animate-spin' />
+                <RiLoader4Line className='text-2xl animate-spin' />
                 {t('form.analyzing')}
               </>
             ) : (
               <>
                 {t('form.start_button')}
-                <ArrowRight className='w-5 h-5' />
+                <RiArrowRightLine className='text-xl' />
               </>
             )}
           </button>
@@ -650,13 +650,13 @@ The prompt should be written in ${langInstruction}, unless the user explicitly r
             >
               {isGenerating ? (
                 <>
-                  <Loader2 className='w-5 h-5 animate-spin' />
+                  <RiLoader4Line className='text-xl animate-spin' />
                   {t('form.thinking')}
                 </>
               ) : (
                 <>
                   {t('form.next_round')}
-                  <ChevronRight className='w-5 h-5' />
+                  <RiArrowRightSLine className='text-xl' />
                 </>
               )}
             </button>
@@ -667,7 +667,7 @@ The prompt should be written in ${langInstruction}, unless the user explicitly r
                 disabled={isGenerating}
                 className='py-3 px-6 rounded-lg font-medium text-zinc-700 bg-zinc-100 hover:bg-zinc-200 dark:text-zinc-300 dark:bg-zinc-800 dark:hover:bg-zinc-700 transition-all flex items-center justify-center gap-2'
               >
-                <Sparkles className='w-5 h-5' />
+                <RiSparklingLine className='text-xl' />
                 {t('form.finish_button')}
               </button>
             )}
@@ -679,14 +679,14 @@ The prompt should be written in ${langInstruction}, unless the user explicitly r
       {error && (
         <div className='p-4 rounded-lg bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400 flex items-center justify-between gap-2'>
           <div className='flex items-center gap-2'>
-            <AlertCircle className='w-5 h-5' />
+            <RiErrorWarningLine className='text-xl' />
             {error}
           </div>
           <button
             onClick={handleRetry}
             className='flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-md bg-white text-red-600 hover:bg-red-100 dark:bg-red-950 dark:text-red-300 dark:hover:bg-red-900/50 transition-colors shadow-sm'
           >
-            <RefreshCcw className='w-4 h-4' />
+            <RiRefreshLine className='text-base' />
             {t('form.retry')}
           </button>
         </div>

@@ -1,4 +1,4 @@
-import { Shield, Trash2 } from 'lucide-react'
+import { RiDeleteBinLine, RiShieldLine } from '@remixicon/react'
 
 export function SecuritySection({
   hasEncryptedKeys,
@@ -24,7 +24,7 @@ export function SecuritySection({
   return (
     <div className='pt-4 border-t border-zinc-200 dark:border-zinc-800'>
       <div className='flex items-center gap-2 mb-3 text-zinc-900 dark:text-zinc-100 font-medium'>
-        <Shield className='w-4 h-4' />
+        <RiShieldLine className='text-base' />
         <span>{t('settings.security_title') || 'Security'}</span>
       </div>
       {!hasEncryptedKeys ? (
@@ -68,7 +68,7 @@ export function SecuritySection({
         <div className='space-y-3'>
           <div className='flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-md'>
             <span className='text-sm text-green-700 dark:text-green-300 flex items-center gap-2'>
-              <Shield className='w-4 h-4' />
+              <RiShieldLine className='text-base' />
               {t('settings.security_enabled') || 'Encryption Enabled'}
             </span>
           </div>
@@ -77,7 +77,7 @@ export function SecuritySection({
               onClick={() => setShowResetConfirm(true)}
               className='text-xs text-red-600 hover:text-red-700 dark:text-red-400 underline flex items-center gap-1'
             >
-              <Trash2 className='w-3 h-3' />
+              <RiDeleteBinLine className='text-xs' />
               {t('settings.reset_all_keys') || 'Reset all keys & passphrase'}
             </button>
           ) : (

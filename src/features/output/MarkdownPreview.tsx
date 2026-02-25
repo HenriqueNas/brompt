@@ -1,6 +1,11 @@
 import { useLanguage } from '@/contexts/LanguageContext'
 import { useToast } from '@/contexts/ToastContext'
-import { Check, Copy, Eye, FileCode } from 'lucide-react'
+import {
+  RiCheckLine,
+  RiEyeLine,
+  RiFileCodeLine,
+  RiFileCopyLine,
+} from '@remixicon/react'
 import React, { useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 
@@ -37,9 +42,9 @@ export const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({
           title={isRaw ? 'Preview' : 'Raw'}
         >
           {isRaw ? (
-            <Eye className='w-4 h-4 text-zinc-500 dark:text-zinc-400' />
+            <RiEyeLine className='text-base text-zinc-500 dark:text-zinc-400' />
           ) : (
-            <FileCode className='w-4 h-4 text-zinc-500 dark:text-zinc-400' />
+            <RiFileCodeLine className='text-base text-zinc-500 dark:text-zinc-400' />
           )}
         </button>
         <button
@@ -49,9 +54,9 @@ export const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({
           title='Copy raw text'
         >
           {copied ? (
-            <Check className='w-4 h-4 text-green-500' />
+            <RiCheckLine className='text-base text-green-500' />
           ) : (
-            <Copy className='w-4 h-4 text-zinc-500 dark:text-zinc-400' />
+            <RiFileCopyLine className='text-base text-zinc-500 dark:text-zinc-400' />
           )}
         </button>
       </div>
