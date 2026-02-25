@@ -2,10 +2,13 @@
 
 import { useLanguage } from '@/contexts/LanguageContext'
 import { useSettings } from '@/contexts/SettingsContext'
-import { PROVIDER_REGISTRY } from '@/lib/llm/registry'
 import { LLMProviderType } from '@/lib/llm/types'
 import { X } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { ApiKeyField } from '../settings/ApiKeyField'
+import { LanguageSelect } from '../settings/LanguageSelect'
+import { ProviderSelect } from '../settings/ProviderSelect'
+import { SecuritySection } from '../settings/SecuritySection'
 
 interface SettingsModalProps {
   isOpen: boolean
@@ -14,26 +17,84 @@ interface SettingsModalProps {
 
 export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const { t, language, setLanguage } = useLanguage()
-  const { apiKeys, setApiKey, selectedProvider, setSelectedProvider } =
-    useSettings()
+  const {
+    apiKeys,
+    setApiKey,
+    selectedProvider,
+    setSelectedProvider,
+    hasEncryptedKeys,
+    resetKeys,
+  } = useSettings()
 
   const [localKeys, setLocalKeys] = useState<Record<string, string>>({})
   const [localProvider, setLocalProvider] = useState<LLMProviderType>('gemini')
+
+  const [newPassphrase, setNewPassphrase] = useState('')
+  const [confirmPassphrase, setConfirmPassphrase] = useState('')
+  const [error, setError] = useState('')
+  const [showResetConfirm, setShowResetConfirm] = useState(false)
 
   useEffect(() => {
     if (isOpen) {
       setLocalKeys(apiKeys)
       setLocalProvider(selectedProvider)
+      setNewPassphrase('')
+      setConfirmPassphrase('')
+      setError('')
+      setShowResetConfirm(false)
     }
   }, [isOpen, apiKeys, selectedProvider])
 
-  const handleSave = () => {
-    // Save keys
-    Object.keys(localKeys).forEach((provider) => {
-      if (localKeys[provider] !== apiKeys[provider]) {
-        setApiKey(provider, localKeys[provider])
+  const handleSave = async () => {
+    setError('')
+
+    // Validation
+    if (!hasEncryptedKeys) {
+      const anyKeySet = Object.values(localKeys).some((k) => k && k.length > 0)
+
+      if (anyKeySet) {
+        if (!newPassphrase) {
+          setError(
+            t('settings.passphrase_required') ||
+              'Passphrase is required to secure your keys'
+          )
+          return
+        }
+        if (newPassphrase !== confirmPassphrase) {
+          setError(
+            t('settings.passphrase_mismatch') || 'Passphrases do not match'
+          )
+          return
+        }
+        if (newPassphrase.length < 4) {
+          setError(
+            t('settings.passphrase_too_short') ||
+              'Passphrase must be at least 4 characters'
+          )
+          return
+        }
       }
-    })
+    }
+
+    // Save keys
+    const providers = Object.keys(localKeys) as LLMProviderType[]
+    const pass = newPassphrase || undefined
+
+    // If setting up encryption for the first time, re-save all non-empty keys
+    if (!hasEncryptedKeys && pass) {
+      for (const provider of providers) {
+        if (localKeys[provider]) {
+          await setApiKey(provider, localKeys[provider], pass)
+        }
+      }
+    } else {
+      // Otherwise only save changed keys
+      for (const provider of providers) {
+        if (localKeys[provider] !== apiKeys[provider]) {
+          await setApiKey(provider, localKeys[provider])
+        }
+      }
+    }
 
     // Save selected provider
     if (localProvider !== selectedProvider) {
@@ -41,6 +102,13 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     }
 
     onClose()
+  }
+
+  const handleReset = () => {
+    resetKeys()
+    setLocalKeys({})
+    setShowResetConfirm(false)
+    // Don't close, let them start over
   }
 
   if (!isOpen) return null
@@ -82,7 +150,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm'>
-      <div className='w-full max-w-md rounded-lg bg-white p-6 shadow-xl dark:bg-zinc-900'>
+      <div className='w-full max-w-md rounded-lg bg-white p-6 shadow-xl dark:bg-zinc-900 max-h-[90vh] overflow-y-auto'>
         <div className='mb-4 flex items-center justify-between'>
           <h2 className='text-xl font-semibold'>{t('settings.title')}</h2>
           <button
@@ -93,72 +161,48 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           </button>
         </div>
 
-        <div className='space-y-4'>
-          {/* Provider Selection */}
-          <div>
-            <label
-              htmlFor='provider-select'
-              className='mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300'
-            >
-              {t('settings.provider_label')}
-            </label>
-            <select
-              id='provider-select'
-              value={localProvider}
-              onChange={(e) =>
-                setLocalProvider(e.target.value as LLMProviderType)
-              }
-              className='w-full rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800'
-            >
-              {PROVIDER_REGISTRY.map((provider) => (
-                <option key={provider.id} value={provider.id}>
-                  {provider.displayName}
-                </option>
-              ))}
-            </select>
-          </div>
+        <div className='space-y-6'>
+          <ProviderSelect
+            value={localProvider}
+            onChange={(v) => setLocalProvider(v)}
+            label={t('settings.provider_label')}
+          />
 
-          {/* API Key Input */}
-          <div>
-            <label
-              htmlFor='api-key-input'
-              className='mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300'
-            >
-              {t(getProviderLabelKey(localProvider))}
-            </label>
-            <input
-              id='api-key-input'
-              type='password'
-              value={localKeys[localProvider] || ''}
-              onChange={(e) =>
-                setLocalKeys((prev) => ({
-                  ...prev,
-                  [localProvider]: e.target.value,
-                }))
-              }
-              placeholder={getPlaceholder(localProvider)}
-              className='w-full rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800'
-            />
-          </div>
+          <ApiKeyField
+            label={t(getProviderLabelKey(localProvider))}
+            value={localKeys[localProvider] || ''}
+            onChange={(v) =>
+              setLocalKeys((prev) => ({
+                ...prev,
+                [localProvider]: v,
+              }))
+            }
+            placeholder={getPlaceholder(localProvider)}
+          />
 
-          {/* Language Selection */}
-          <div>
-            <label
-              htmlFor='language-select'
-              className='mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300'
-            >
-              {t('settings.language_label')}
-            </label>
-            <select
-              id='language-select'
-              value={language}
-              onChange={(e) => setLanguage(e.target.value as 'en' | 'pt')}
-              className='w-full rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800'
-            >
-              <option value='en'>English</option>
-              <option value='pt'>Português</option>
-            </select>
-          </div>
+          <SecuritySection
+            hasEncryptedKeys={hasEncryptedKeys}
+            newPassphrase={newPassphrase}
+            setNewPassphrase={setNewPassphrase}
+            confirmPassphrase={confirmPassphrase}
+            setConfirmPassphrase={setConfirmPassphrase}
+            showResetConfirm={showResetConfirm}
+            setShowResetConfirm={setShowResetConfirm}
+            handleReset={handleReset}
+            t={t}
+          />
+
+          <LanguageSelect
+            value={language}
+            onChange={(v) => setLanguage(v)}
+            label={t('settings.language_label')}
+          />
+
+          {error && (
+            <div className='p-3 bg-red-50 text-red-600 text-sm rounded-md dark:bg-red-900/20 dark:text-red-400'>
+              {error}
+            </div>
+          )}
         </div>
 
         <div className='mt-6 flex justify-end gap-3'>
