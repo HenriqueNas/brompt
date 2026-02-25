@@ -2,6 +2,7 @@ import { RiCloseLine } from '@remixicon/react'
 import * as React from 'react'
 
 import { cn } from '@/lib/utils'
+import { Button } from './Button'
 
 interface MultiSelectProps {
   value: string[]
@@ -49,17 +50,17 @@ export function MultiSelect({
           className='inline-flex items-center gap-1 rounded bg-[rgba(75,43,238,0.2)] px-1.5 py-0.5 text-xs text-slate-200 border border-[rgba(75,43,238,0.3)] font-mono'
         >
           {val.replace(/\\n/g, '\\n')}
-          <button
+          <Button
             type='button'
             onClick={(e) => {
               e.stopPropagation()
               removeValue(val)
             }}
-            className='ml-0.5 text-slate-400 hover:text-slate-200 focus:outline-none'
+            variant='ghost'
             aria-label={`Remove ${val}`}
           >
             <RiCloseLine className='text-xs' />
-          </button>
+          </Button>
         </span>
       ))}
       <input

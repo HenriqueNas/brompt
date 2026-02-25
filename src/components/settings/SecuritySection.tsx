@@ -1,4 +1,6 @@
 import { RiDeleteBinLine, RiShieldLine } from '@remixicon/react'
+import { Input } from '@/components/ui/Input'
+import { Button } from '@/components/ui/Button'
 
 export function SecuritySection({
   hasEncryptedKeys,
@@ -23,7 +25,7 @@ export function SecuritySection({
 }) {
   return (
     <div className='pt-4 border-t border-zinc-200 dark:border-zinc-800'>
-      <div className='flex items-center gap-2 mb-3 text-zinc-900 dark:text-zinc-100 font-medium'>
+      <div className='flex items-center gap-2 mb-3 text-foreground font-medium'>
         <RiShieldLine className='text-base' />
         <span>{t('settings.security_title') || 'Security'}</span>
       </div>
@@ -36,31 +38,29 @@ export function SecuritySection({
           <div>
             <label
               htmlFor='passphrase-input'
-              className='mb-1 block text-xs font-medium text-zinc-700 dark:text-zinc-300'
+              className='mb-1 block text-xs font-medium text-foreground'
             >
               {t('settings.create_passphrase') || 'Create Passphrase'}
             </label>
-            <input
+            <Input
               id='passphrase-input'
               type='password'
               value={newPassphrase}
               onChange={(e) => setNewPassphrase(e.target.value)}
-              className='w-full rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800'
             />
           </div>
           <div>
             <label
               htmlFor='passphrase-confirm-input'
-              className='mb-1 block text-xs font-medium text-zinc-700 dark:text-zinc-300'
+              className='mb-1 block text-xs font-medium text-foreground'
             >
               {t('settings.confirm_passphrase') || 'Confirm Passphrase'}
             </label>
-            <input
+            <Input
               id='passphrase-confirm-input'
               type='password'
               value={confirmPassphrase}
               onChange={(e) => setConfirmPassphrase(e.target.value)}
-              className='w-full rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800'
             />
           </div>
         </div>
@@ -68,18 +68,19 @@ export function SecuritySection({
         <div className='space-y-3'>
           <div className='flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-md'>
             <span className='text-sm text-green-700 dark:text-green-300 flex items-center gap-2'>
-              <RiShieldLine className='text-base' />
+              {/* <RiShieldLine className='text-base' /> */}
               {t('settings.security_enabled') || 'Encryption Enabled'}
             </span>
           </div>
           {!showResetConfirm ? (
-            <button
+            <Button
               onClick={() => setShowResetConfirm(true)}
-              className='text-xs text-red-600 hover:text-red-700 dark:text-red-400 underline flex items-center gap-1'
+              variant='text'
+              className='text-xs text-error hover:text-red-700 dark:text-red-400 underline flex items-center gap-1'
             >
               <RiDeleteBinLine className='text-xs' />
               {t('settings.reset_all_keys') || 'Reset all keys & passphrase'}
-            </button>
+            </Button>
           ) : (
             <div className='p-3 bg-red-50 dark:bg-red-900/20 rounded-md space-y-2'>
               <p className='text-xs text-red-700 dark:text-red-300 font-medium'>
@@ -87,18 +88,20 @@ export function SecuritySection({
                   'Are you sure? This will delete all API keys.'}
               </p>
               <div className='flex gap-2'>
-                <button
+                <Button
+                  variant='ghost'
                   onClick={() => setShowResetConfirm(false)}
-                  className='text-xs px-3 py-1 bg-white dark:bg-zinc-800 border rounded shadow-sm'
+                  className='text-xs h-auto py-1 px-3'
                 >
                   {t('settings.cancel')}
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant='solid'
                   onClick={handleReset}
-                  className='text-xs px-3 py-1 bg-red-600 text-white rounded shadow-sm hover:bg-red-700'
+                  className='text-xs h-auto py-1 px-3 bg-error hover:bg-red-600'
                 >
                   {t('settings.confirm_reset') || 'Reset'}
-                </button>
+                </Button>
               </div>
             </div>
           )}

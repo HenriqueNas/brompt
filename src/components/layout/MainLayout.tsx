@@ -14,7 +14,7 @@ export function MainLayout({ children }: MainLayoutProps) {
   const { isSettingsOpen, openSettings, closeSettings } = useSettings()
 
   return (
-    <div className='flex h-screen bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50'>
+    <div className='flex h-screen bg-background text-foreground dark:bg-background dark:text-foreground'>
       <Sidebar onSettingsClick={openSettings} />
 
       <main className='flex-1 overflow-y-auto p-8'>

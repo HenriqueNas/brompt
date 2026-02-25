@@ -3,6 +3,7 @@
 import { RiCloseLine } from '@remixicon/react'
 import React, { useEffect } from 'react'
 import { createPortal } from 'react-dom'
+import { Button } from './Button'
 
 interface ModalProps {
   isOpen: boolean
@@ -45,13 +46,9 @@ export function Modal({
       >
         <div className='mb-4 flex items-center justify-between'>
           <h2 className='text-xl font-semibold'>{title}</h2>
-          <button
-            onClick={onClose}
-            className='text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors'
-            aria-label='Close'
-          >
+          <Button variant='ghost' onClick={onClose} aria-label='Close'>
             <RiCloseLine className='text-2xl' />
-          </button>
+          </Button>
         </div>
 
         <div className='space-y-4'>{children}</div>
