@@ -13,6 +13,13 @@ vi.mock('../../src/lib/storage', () => ({
   },
 }))
 
+// Mock crypto to avoid Web Crypto in JSDOM and ensure encrypt returns a value
+vi.mock('../../src/lib/crypto', () => ({
+  encrypt: vi.fn().mockResolvedValue('mock-encrypted'),
+  decrypt: vi.fn(),
+  isEncrypted: vi.fn().mockReturnValue(false),
+}))
+
 describe('SettingsModal Integration', () => {
   beforeEach(() => {
     vi.clearAllMocks()
