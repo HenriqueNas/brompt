@@ -18,8 +18,8 @@ export const DynamicToggle: React.FC<DynamicToggleProps> = ({
   isLoading = false,
 }) => {
   return (
-    <div className='flex items-center justify-between py-2'>
-      <div className='flex flex-col'>
+    <div className='flex items-center justify-between py-4'>
+      <div className='flex flex-col space-y-1'>
         <label
           htmlFor={id}
           className='text-sm font-medium text-zinc-900 dark:text-zinc-100'
@@ -27,7 +27,7 @@ export const DynamicToggle: React.FC<DynamicToggleProps> = ({
           {label}
         </label>
         {description && (
-          <p className='text-xs text-zinc-500 dark:text-zinc-400'>
+          <p className='text-sm text-zinc-500 dark:text-zinc-400'>
             {description}
           </p>
         )}

@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/Button'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { useToast } from '@/contexts/ToastContext'
 import {
@@ -35,9 +36,9 @@ export const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({
   return (
     <div className='relative group rounded-lg border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900 overflow-hidden shadow-sm'>
       <div className='absolute top-2 right-2 flex items-center gap-2 z-10'>
-        <button
+        <Button
           onClick={() => setIsRaw(!isRaw)}
-          className='p-2 rounded-md bg-zinc-100/80 hover:bg-zinc-200 dark:bg-zinc-800/80 dark:hover:bg-zinc-700 transition-colors backdrop-blur-sm'
+          variant='ghost'
           aria-label={isRaw ? 'Show preview' : 'Show raw markdown'}
           title={isRaw ? 'Preview' : 'Raw'}
         >
@@ -46,10 +47,10 @@ export const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({
           ) : (
             <RiFileCodeLine className='text-base text-zinc-500 dark:text-zinc-400' />
           )}
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={handleCopy}
-          className='p-2 rounded-md bg-zinc-100/80 hover:bg-zinc-200 dark:bg-zinc-800/80 dark:hover:bg-zinc-700 transition-colors backdrop-blur-sm'
+          variant='ghost'
           aria-label='Copy to clipboard'
           title='Copy raw text'
         >
@@ -58,7 +59,7 @@ export const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({
           ) : (
             <RiFileCopyLine className='text-base text-zinc-500 dark:text-zinc-400' />
           )}
-        </button>
+        </Button>
       </div>
       <div className='p-6 prose prose-zinc dark:prose-invert max-w-none text-sm leading-relaxed'>
         {isRaw ? (

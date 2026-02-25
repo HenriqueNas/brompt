@@ -1,5 +1,12 @@
 import React from 'react'
 import { FieldOption } from '../schema'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/Select'
 
 interface DynamicSelectProps {
   id: string
@@ -21,32 +28,37 @@ export const DynamicSelect: React.FC<DynamicSelectProps> = ({
   isLoading = false,
 }) => {
   return (
-    <div className='space-y-2'>
-      <label
-        htmlFor={id}
-        className='block text-sm font-medium text-zinc-900 dark:text-zinc-100'
-      >
-        {label}
-      </label>
-      {description && (
-        <p className='text-xs text-zinc-500 dark:text-zinc-400'>
-          {description}
-        </p>
-      )}
-      <div className='relative'>
-        <select
-          id={id}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          disabled={isLoading}
-          className='w-full rounded-md border border-zinc-300 bg-white py-2 pl-3 pr-10 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100'
+    <div className='space-y-4'>
+      <div className='space-y-1'>
+        <label
+          htmlFor={id}
+          className='block text-sm font-medium text-zinc-900 dark:text-zinc-100'
         >
-          {options.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+          {label}
+        </label>
+        {description && (
+          <p className='text-sm text-zinc-500 dark:text-zinc-400'>
+            {description}
+          </p>
+        )}
+      </div>
+      <div className='relative'>
+        <Select value={value} onValueChange={onChange} disabled={isLoading}>
+          <SelectTrigger
+            id={id}
+            className='w-full bg-white dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100'
+          >
+            <SelectValue placeholder='Select an option' />
+          </SelectTrigger>
+          <SelectContent>
+            {options.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
         {isLoading && (
           <div className='absolute right-8 top-2.5 h-4 w-4 animate-spin rounded-full border-2 border-zinc-300 border-t-indigo-600'></div>
         )}
