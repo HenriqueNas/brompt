@@ -1,9 +1,10 @@
 'use client'
 
+import { Button } from '@/components/ui/Button'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { useSettings } from '@/contexts/SettingsContext'
 import { LLMProviderType } from '@/lib/llm/types'
-import { X } from 'lucide-react'
+import { RiCloseLine } from '@remixicon/react'
 import { useEffect, useState } from 'react'
 import { ApiKeyField } from '../settings/ApiKeyField'
 import { LanguageSelect } from '../settings/LanguageSelect'
@@ -150,15 +151,14 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm'>
-      <div className='w-full max-w-md rounded-lg bg-white p-6 shadow-xl dark:bg-zinc-900 max-h-[90vh] overflow-y-auto'>
+      <div className='w-full max-w-md rounded-lg bg-background p-6 shadow-xl dark:bg-background max-h-[90vh] overflow-y-auto border border-brand-20'>
         <div className='mb-4 flex items-center justify-between'>
-          <h2 className='text-xl font-semibold'>{t('settings.title')}</h2>
-          <button
-            onClick={onClose}
-            className='text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'
-          >
-            <X size={24} />
-          </button>
+          <h2 className='text-heading-md font-semibold text-foreground'>
+            {t('settings.title')}
+          </h2>
+          <Button onClick={onClose} variant='text' size='icon'>
+            <RiCloseLine size={20} />
+          </Button>
         </div>
 
         <div className='space-y-6'>
@@ -199,25 +199,19 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           />
 
           {error && (
-            <div className='p-3 bg-red-50 text-red-600 text-sm rounded-md dark:bg-red-900/20 dark:text-red-400'>
+            <div className='p-3 bg-red-50 text-error text-sm rounded-md dark:bg-red-900/20'>
               {error}
             </div>
           )}
         </div>
 
         <div className='mt-6 flex justify-end gap-3'>
-          <button
-            onClick={onClose}
-            className='rounded-md px-4 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800'
-          >
+          <Button variant='ghost' onClick={onClose}>
             {t('settings.cancel')}
-          </button>
-          <button
-            onClick={handleSave}
-            className='rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700'
-          >
+          </Button>
+          <Button variant='solid' onClick={handleSave}>
             {t('settings.save')}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

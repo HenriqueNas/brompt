@@ -26,7 +26,7 @@ export const DynamicSlider: React.FC<DynamicSliderProps> = ({
   return (
     <div className='space-y-4'>
       <div className='flex justify-between items-center'>
-        <div>
+        <div className='space-y-1'>
           <label
             htmlFor={id}
             className='block text-sm font-medium text-zinc-900 dark:text-zinc-100'
@@ -34,7 +34,7 @@ export const DynamicSlider: React.FC<DynamicSliderProps> = ({
             {label}
           </label>
           {description && (
-            <p className='text-xs text-zinc-500 dark:text-zinc-400'>
+            <p className='text-sm text-zinc-500 dark:text-zinc-400'>
               {description}
             </p>
           )}

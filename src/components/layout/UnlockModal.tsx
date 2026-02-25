@@ -1,9 +1,11 @@
 'use client'
 
+import { Button } from '@/components/ui/Button'
+import { Input } from '@/components/ui/Input'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { useSettings } from '@/contexts/SettingsContext'
 import { useToast } from '@/contexts/ToastContext'
-import { Lock, RefreshCw, Trash2 } from 'lucide-react'
+import { RiDeleteBinLine, RiLockLine, RiRefreshLine } from '@remixicon/react'
 import { useState } from 'react'
 
 export function UnlockModal() {
@@ -44,76 +46,74 @@ export function UnlockModal() {
 
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm'>
-      <div className='w-full max-w-md rounded-xl bg-white p-6 shadow-2xl dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800'>
+      <div className='w-full max-w-md rounded-xl bg-background p-6 shadow-2xl dark:bg-background border border-brand-20 dark:border-zinc-800'>
         <div className='flex flex-col items-center text-center space-y-4'>
-          <div className='p-3 bg-blue-100 text-blue-600 rounded-full dark:bg-blue-900/30 dark:text-blue-400'>
-            <Lock className='w-8 h-8' />
+          <div className='p-3 bg-brand-20 text-brand-60 rounded-full dark:bg-brand-20/30 dark:text-brand-40'>
+            <RiLockLine className='text-3xl' />
           </div>
 
-          <h2 className='text-xl font-bold text-zinc-900 dark:text-zinc-50'>
+          <h2 className='text-heading-md font-bold text-foreground'>
             {t('settings.locked_title') || 'Application Locked'}
           </h2>
 
-          <p className='text-sm text-zinc-500 dark:text-zinc-400'>
+          <p className='text-caption text-neutral'>
             {t('settings.locked_desc') ||
               'Please enter your passphrase to unlock your API keys.'}
           </p>
 
           {!showResetConfirm ? (
             <form onSubmit={handleUnlock} className='w-full space-y-4'>
-              <input
+              <Input
                 type='password'
                 value={passphrase}
                 onChange={(e) => setPassphrase(e.target.value)}
                 placeholder={
                   t('settings.passphrase_placeholder') || 'Enter passphrase'
                 }
-                className='w-full rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800'
                 autoFocus
               />
 
-              <button
+              <Button
                 type='submit'
                 disabled={isLoading || !passphrase}
-                className='w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'
+                className='w-full'
+                variant='solid'
               >
                 {isLoading ? (
-                  <RefreshCw className='w-4 h-4 animate-spin' />
+                  <RiRefreshLine className='text-base animate-spin' />
                 ) : (
                   t('settings.unlock_button') || 'Unlock'
                 )}
-              </button>
+              </Button>
 
-              <button
-                type='button'
-                onClick={() => setShowResetConfirm(true)}
-                className='text-xs text-zinc-500 hover:text-red-500 dark:text-zinc-400 dark:hover:text-red-400 underline transition-colors'
-              >
+              <Button type='button' onClick={() => setShowResetConfirm(true)}>
                 {t('settings.forgot_passphrase') ||
                   'Forgot passphrase? Reset all keys'}
-              </button>
+              </Button>
             </form>
           ) : (
-            <div className='w-full space-y-4 pt-4 border-t border-zinc-100 dark:border-zinc-800'>
-              <p className='text-sm text-red-600 dark:text-red-400 font-medium'>
+            <div className='w-full space-y-4 pt-4 border-t border-brand-20 dark:border-zinc-800'>
+              <p className='text-caption text-error font-medium'>
                 {t('settings.reset_warning') ||
                   'Warning: This will delete all stored API keys. You will need to re-enter them.'}
               </p>
 
               <div className='flex gap-2'>
-                <button
+                <Button
                   onClick={() => setShowResetConfirm(false)}
-                  className='flex-1 py-2 px-4 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 rounded-md font-medium dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-300 transition-colors'
+                  variant='ghost'
+                  className='flex-1'
                 >
                   {t('settings.cancel') || 'Cancel'}
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={handleReset}
-                  className='flex-1 py-2 px-4 bg-red-600 hover:bg-red-700 text-white rounded-md font-medium transition-colors flex items-center justify-center gap-2'
+                  className='flex-1 bg-error hover:bg-red-700'
+                  variant='solid'
                 >
-                  <Trash2 className='w-4 h-4' />
+                  <RiDeleteBinLine className='text-base mr-2' />
                   {t('settings.confirm_reset') || 'Reset All'}
-                </button>
+                </Button>
               </div>
             </div>
           )}

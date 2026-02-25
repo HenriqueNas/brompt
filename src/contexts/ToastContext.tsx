@@ -1,6 +1,12 @@
 'use client'
 
-import { AlertCircle, CheckCircle, Info, X } from 'lucide-react'
+import { Button } from '@/components/ui/Button'
+import {
+  RiCheckboxCircleLine,
+  RiCloseLine,
+  RiErrorWarningLine,
+  RiInformation2Line,
+} from '@remixicon/react'
 import {
   createContext,
   ReactNode,
@@ -64,17 +70,20 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                 }`}
               >
                 <div className='flex items-center gap-3'>
-                  {toast.type === 'success' && <CheckCircle size={20} />}
-                  {toast.type === 'error' && <AlertCircle size={20} />}
-                  {toast.type === 'info' && <Info size={20} />}
+                  {toast.type === 'success' && (
+                    <RiCheckboxCircleLine className='text-xl' />
+                  )}
+                  {toast.type === 'error' && (
+                    <RiErrorWarningLine className='text-xl' />
+                  )}
+                  {toast.type === 'info' && (
+                    <RiInformation2Line className='text-xl' />
+                  )}
                   <p className='text-sm font-medium'>{toast.message}</p>
                 </div>
-                <button
-                  onClick={() => removeToast(toast.id)}
-                  className='ml-4 text-current opacity-70 hover:opacity-100'
-                >
-                  <X size={16} />
-                </button>
+                <Button onClick={() => removeToast(toast.id)} variant='ghost'>
+                  <RiCloseLine className='text-base' />
+                </Button>
               </div>
             ))}
           </div>,
