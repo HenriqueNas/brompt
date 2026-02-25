@@ -7,12 +7,10 @@ import { clearDraft, loadDraft } from '@/features/form/useAutosaveDraft'
 import {
   RiAddLine,
   RiInboxLine,
-  RiLayoutGridLine,
   RiMessage3Line,
   RiSearchLine,
   RiSettingsLine,
 } from '@remixicon/react'
-import Link from 'next/link'
 import { useState } from 'react'
 
 interface SidebarProps {
@@ -143,14 +141,7 @@ export function Sidebar({ onSettingsClick }: SidebarProps) {
           </div>
         </div>
 
-        <div className='border-t border-zinc-200 p-4 dark:border-zinc-800 space-y-1'>
-          <Link
-            href='/components'
-            className='flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-200 dark:text-zinc-300 dark:hover:bg-zinc-800'
-          >
-            <RiLayoutGridLine className='text-base' />
-            Components
-          </Link>
+        <div className='border-t border-zinc-200 p-4 dark:border-zinc-800'>
           <button
             onClick={onSettingsClick}
             className='flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-200 dark:text-zinc-300 dark:hover:bg-zinc-800'
