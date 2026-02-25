@@ -1,5 +1,6 @@
 'use client'
 
+import { Button } from '@/components/ui/Button'
 import {
   RiCheckboxCircleLine,
   RiCloseLine,
@@ -80,12 +81,9 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                   )}
                   <p className='text-sm font-medium'>{toast.message}</p>
                 </div>
-                <button
-                  onClick={() => removeToast(toast.id)}
-                  className='ml-4 text-current opacity-70 hover:opacity-100'
-                >
+                <Button onClick={() => removeToast(toast.id)} variant='ghost'>
                   <RiCloseLine className='text-base' />
-                </button>
+                </Button>
               </div>
             ))}
           </div>,

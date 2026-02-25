@@ -11,14 +11,9 @@ export default function Home() {
   return (
     <MainLayout>
       <div className='space-y-6'>
-        <div className='border-b border-zinc-200 pb-4 dark:border-zinc-800'>
-          <h1 className='text-3xl font-bold tracking-tight'>
-            {t('app.title')}
-          </h1>
-          <p className='text-zinc-500 dark:text-zinc-400'>{t('app.tagline')}</p>
-        </div>
+        <h1 className='text-heading-xl text-foreground'>{t('app.title')}</h1>
 
-        <div className='rounded-lg border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900'>
+        <div className='rounded-xl border border-[rgb(59,50,103)] p-12'>
           <PromptFormEngine />
         </div>
       </div>
